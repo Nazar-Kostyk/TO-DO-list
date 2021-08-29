@@ -1,0 +1,4 @@
+---
+inherit_from: .rubocop-rails.yml
+AllCops:
+  TargetRubyVersion: 3.0.2

@@ -1,0 +1,171 @@
+inherit_from: .rubocop-development.yml
+
+require:
+  - rubocop-rails
+
+AllCops:
+  inherit_mode:
+    merge:
+      - Exclude
+  Exclude:
+    - 'bin/{eslint,rails,setup,spring,update,webpack,webpack-dev-server,yarn}'
+    - 'db/schema.rb'
+    - 'log/**/*'
+    - 'node_modules/**/*'
+    - 'tmp/**/*'
+
+# Rails Cop Configuration
+# https://rubocop-rails.readthedocs.io/en/stable/cops_rails/
+
+Rails/ActionFilter:
+  Enabled: true
+Rails/ActiveRecordAliases:
+  Enabled: true
+Rails/ActiveRecordOverride:
+  Enabled: true
+Rails/ActiveSupportAliases:
+  Enabled: true
+Rails/ApplicationJob:
+  Enabled: true
+Rails/ApplicationRecord:
+  Enabled: true
+Rails/AssertNot:
+  Enabled: true
+Rails/BelongsTo:
+  Enabled: true
+Rails/Blank:
+  Enabled: true
+Rails/BulkChangeTable:
+  Enabled: true
+  Database: mysql
+  inherit_mode:
+    merge:
+      - Exclude
+  Exclude:
+    - !ruby/regexp /db\/migrate\/201[012345678].*\.rb$/
+    - !ruby/regexp /db\/migrate\/20190[1234567].*\.rb$/
+Rails/CreateTableWithTimestamps:
+  Enabled: true
+  inherit_mode:
+    merge:
+      - Exclude
+  Exclude:
+    - !ruby/regexp /db\/migrate\/201[012345678].*\.rb$/
+    - !ruby/regexp /db\/migrate\/20190[1234567].*\.rb$/
+Rails/Date:
+  Enabled: true
+Rails/Delegate:
+  Enabled: true
+Rails/DelegateAllowBlank:
+  Enabled: true
+Rails/DynamicFindBy:
+  Enabled: true
+Rails/EnumUniqueness:
+  Enabled: true
+Rails/EnvironmentComparison:
+  Enabled: true
+Rails/Exit:
+  Enabled: true
+Rails/FilePath:
+  # Disable because Rails by default will generate this lint with config/development.rb.
+  # Also, Rails uses both interchangeably in generated apps and their own code. 
+  # They have chosen to disable this cop as well so if it's good enough for Rails 
+  # then it should be good for us!
+  Enabled: false
+Rails/FindBy:
+  Enabled: true
+Rails/FindEach:
+  Enabled: true
+Rails/HasAndBelongsToMany:
+  Enabled: true
+Rails/HasManyOrHasOneDependent:
+  Enabled: true
+Rails/HelperInstanceVariable:
+  Enabled: true
+Rails/HttpPositionalArguments:
+  Enabled: true
+Rails/HttpStatus:
+  Enabled: true
+Rails/IgnoredSkipActionFilterOption:
+  Enabled: true
+Rails/InverseOf:
+  Enabled: true
+Rails/LexicallyScopedActionFilter:
+  Enabled: true
+Rails/LinkToBlank:
+  Enabled: true
+Rails/NotNullColumn:
+  Enabled: true
+  inherit_mode:
+    merge:
+      - Exclude
+  Exclude:
+    - !ruby/regexp /db\/migrate\/201[012345678].*\.rb$/
+    - !ruby/regexp /db\/migrate\/20190[1234567].*\.rb$/
+Rails/Output:
+  Enabled: true
+Rails/OutputSafety:
+  Enabled: true
+Rails/PluralizationGrammar:
+  Enabled: true
+Rails/Presence:
+  Enabled: true
+Rails/Present:
+  Enabled: true
+Rails/ReadWriteAttribute:
+  Enabled: true
+Rails/RedundantAllowNil:
+  Enabled: true
+Rails/RedundantReceiverInWithOptions:
+  Enabled: true
+Rails/ReflectionClassName:
+  Enabled: true
+Rails/RefuteMethods:
+  Enabled: true
+Rails/RelativeDateConstant:
+  Enabled: true
+Rails/RequestReferer:
+  Enabled: true
+Rails/ReversibleMigration:
+  Enabled: true
+  inherit_mode:
+    merge:
+      - Exclude
+  Exclude:
+    - !ruby/regexp /db\/migrate\/201[012345678].*\.rb$/
+    - !ruby/regexp /db\/migrate\/20190[1234567].*\.rb$/
+Rails/SafeNavigation:
+  Enabled: true
+Rails/SaveBang:
+# Disabled. This seems to be prone to false positives without a lot of a per-project configuration.
+  Enabled: false
+Rails/ScopeArgs:
+  Enabled: true
+Rails/SkipsModelValidations:
+  Enabled: true
+Rails/TimeZone:
+  Enabled: true
+Rails/UniqBeforePluck:
+  Enabled: true
+Rails/UnknownEnv:
+  Enabled: true
+Rails/Validation:
+  Enabled: true
+
+
+Style/ClassAndModuleChildren:
+# Disable this cop within Rails configuration, so that both styles can be used in a Rails project,
+# which is conventional, in the wild.
+  Enabled: false
+Style/Documentation:
+  inherit_mode:
+    merge:
+      - Exclude
+  Exclude:
+    - db/migrate/**/*
+Style/DocumentationMethod:
+  inherit_mode:
+    merge:
+      - Exclude
+  Exclude:
+    - db/migrate/**/*
