@@ -52,7 +52,7 @@ rubocop:
   cache:
     policy: pull-push
   script:
-    - bundle exec rubocop
+    - bundle exec rubocop -c .rubocop.yml
 
 brakeman:
   extends: .build
