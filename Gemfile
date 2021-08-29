@@ -15,6 +15,9 @@ gem 'prosopite'
 gem 'puma', '~> 5.0'
 gem 'rails', '~> 6.1.4', '>= 6.1.4.1'
 gem 'rubocop', require: false
+gem 'rubocop-rails'
+gem 'rubocop-rspec'
+gem 'simplecov', require: false, group: :test
 
 group :development, :test do
   gem 'byebug', platforms: %i[mri mingw x64_mingw]
