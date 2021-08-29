@@ -8,6 +8,7 @@ ruby '3.0.2'
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.4.4', require: false
 gem 'jbuilder', '~> 2.7'
+gem 'jwt_sessions'
 gem 'lefthook'
 gem 'pg', '~> 1.1'
 gem 'pg_query'
