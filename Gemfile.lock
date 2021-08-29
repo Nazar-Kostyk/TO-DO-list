@@ -84,6 +84,8 @@ GEM
     google-protobuf (3.17.3-x86_64-linux)
     i18n (1.8.10)
       concurrent-ruby (~> 1.0)
+    jbuilder (2.11.2)
+      activesupport (>= 5.0.0)
     listen (3.7.0)
       rb-fsevent (~> 0.10, >= 0.10.3)
       rb-inotify (~> 0.9, >= 0.9.10)
@@ -201,6 +203,7 @@ DEPENDENCIES
   brakeman
   byebug
   factory_bot_rails
+  jbuilder (~> 2.7)
   listen (~> 3.3)
   pg (~> 1.1)
   pg_query
