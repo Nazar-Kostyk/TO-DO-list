@@ -12,8 +12,12 @@
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
 #
-require 'rails_helper'
-
 RSpec.describe User, type: :model do
-  pending "add some examples to (or delete) #{__FILE__}"
+  it 'has correct parrent' do
+    expect(subject).to be_a_kind_of(ApplicationRecord)
+  end
+
+  describe 'associations' do
+    it { should have_many(:to_do_lists).class_name('ToDoList') }
+  end
 end

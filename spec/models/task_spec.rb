@@ -11,8 +11,12 @@
 #  created_at    :datetime         not null
 #  updated_at    :datetime         not null
 #
-require 'rails_helper'
-
 RSpec.describe Task, type: :model do
-  pending "add some examples to (or delete) #{__FILE__}"
+  it 'has correct parrent' do
+    expect(subject).to be_a_kind_of(ApplicationRecord)
+  end
+
+  describe 'associations' do
+    it { should belong_to(:to_do_list).class_name('ToDoList') }
+  end
 end
