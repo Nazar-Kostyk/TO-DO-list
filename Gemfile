@@ -16,6 +16,7 @@ gem 'prosopite'
 gem 'puma', '~> 5.0'
 gem 'rails', '~> 6.1.4', '>= 6.1.4.1'
 gem 'rubocop', require: false
+gem 'rubocop-performance'
 gem 'rubocop-rails'
 gem 'rubocop-rspec'
 gem 'simplecov', require: false, group: :test

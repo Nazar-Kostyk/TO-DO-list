@@ -28,3 +28,9 @@
 
 # Ignore test coverage reports.
 /coverage/*
+
+# Ignore rubocop configs.
+.rubocop-development.yml
+.rubocop-rails.yml
+.rubocop.yml
+
