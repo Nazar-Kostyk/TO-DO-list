@@ -18,6 +18,7 @@ stages:
     POSTGRES_PASSWORD: ""
     POSTGRES_HOST_AUTH_METHOD: trust
   before_script:
+    - gem install bundler --no-document
     - RAILS_ENV=test bundle exec rake db:create
     
 rspec:
