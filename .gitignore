@@ -28,3 +28,6 @@
 
 # Ignore test coverage reports.
 /coverage/*
+
+# Ignore local GitLab runner builds.
+/builds/*
