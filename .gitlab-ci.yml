@@ -19,6 +19,7 @@ stages:
     POSTGRES_HOST_AUTH_METHOD: trust
   before_script:
     - gem install bundler --no-document
+    - bundle install --jobs $(nproc) "${FLAGS[@]}"
     - RAILS_ENV=test bundle exec rake db:create
     
 rspec:

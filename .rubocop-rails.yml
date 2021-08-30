@@ -13,6 +13,7 @@ AllCops:
     - 'log/**/*'
     - 'node_modules/**/*'
     - 'tmp/**/*'
+    - 'builds/**/*'
 
 # Rails Cop Configuration
 # https://rubocop-rails.readthedocs.io/en/stable/cops_rails/
