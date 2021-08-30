@@ -14,8 +14,8 @@ pre-commit:
     rubocop:
       tags: backend style
       glob: "*.rb"
-      run: bundle exec rubocop {staged_files} --parallel
+      run: bundle exec rubocop --parallel
     rspec:
       tags: code coverage
       glob: "*.rb"
-      run: bundle exec rspec {staged_files}
+      run: bundle exec rspec
