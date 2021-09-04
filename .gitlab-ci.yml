@@ -7,7 +7,7 @@ stages:
 .build:
   image: ruby:3.0.2
   cache:
-    key: gems
+    key: gems_and_packages
     paths:
       - vendor/ruby
   before_script:
