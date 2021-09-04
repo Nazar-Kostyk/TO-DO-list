@@ -3,39 +3,40 @@
 source 'https://rubygems.org'
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby '3.0.2'
+ruby File.read('.ruby-version').strip
+
+gem 'rails', '~> 6.1.4', '>= 6.1.4.1'
 
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.4.4', require: false
-gem 'jbuilder', '~> 2.7'
-gem 'jwt_sessions'
-gem 'lefthook'
-gem 'pg', '~> 1.1'
-gem 'pg_query'
-gem 'prosopite'
+gem 'jwt_sessions', '>= 2.6.0'
+gem 'pg', '>= 1.1'
 gem 'puma', '~> 5.0'
-gem 'rails', '~> 6.1.4', '>= 6.1.4.1'
-gem 'rubocop', require: false
-gem 'rubocop-performance'
-gem 'rubocop-rails'
-gem 'rubocop-rspec'
-gem 'simplecov', require: false, group: :test
 
 group :development, :test do
-  gem 'byebug', platforms: %i[mri mingw x64_mingw]
-  gem 'factory_bot_rails'
+  gem 'byebug', '>= 11.1.3', platforms: %i[mri mingw x64_mingw]
+  gem 'factory_bot_rails', '>= 6.2.0'
+  gem 'faker', '>= 2.19.0'
+  gem 'prosopite', '>= 1.0.1'
+  gem 'rails_best_practices', '>= 1.21.0'
   gem 'rspec-rails', '~> 5.0.0'
+  gem 'rubocop', '>= 1.20.0', require: false
+  gem 'rubocop-performance', '>= 1.11.5'
+  gem 'rubocop-rails', '>= 2.11.3'
+  gem 'rubocop-rspec', '>= 2.4.0'
+  gem 'simplecov', '>= 0.21.2', require: false, group: :test
 end
 
 group :development do
-  gem 'annotate'
-  gem 'brakeman'
+  gem 'annotate', '>= 3.1.1'
+  gem 'brakeman', '>= 5.1.1'
+  gem 'bundler-audit', '>= 0.9.0.1'
+  gem 'bundler-leak', '>= 0.2.0'
+  gem 'lefthook', '>= 0.7.6'
   gem 'listen', '~> 3.3'
-  gem 'spring'
+  gem 'spring', '>= 2.1.1'
 end
 
 group :test do
   gem 'shoulda-matchers', '~> 5.0'
 end
-
-gem 'tzinfo-data', platforms: %i[mingw mswin x64_mingw jruby]

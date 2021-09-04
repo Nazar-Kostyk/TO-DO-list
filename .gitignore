@@ -31,3 +31,6 @@
 
 # Ignore local GitLab runner builds.
 /builds/*
+
+# Ignore env variables.
+/config/.local_env.yml
