@@ -18,6 +18,6 @@ RSpec.describe User, type: :model do
   end
 
   describe 'associations' do
-    it { should have_many(:to_do_lists).class_name('ToDoList') }
+    it { is_expected.to have_many(:to_do_lists).class_name('ToDoList') }
   end
 end

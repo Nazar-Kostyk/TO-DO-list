@@ -17,8 +17,8 @@ RSpec.describe ToDoList, type: :model do
   end
 
   describe 'associations' do
-    it { should belong_to(:user).class_name('User') }
+    it { is_expected.to belong_to(:user).class_name('User') }
 
-    it { should have_many(:tasks).class_name('Task') }
+    it { is_expected.to have_many(:tasks).class_name('Task') }
   end
 end

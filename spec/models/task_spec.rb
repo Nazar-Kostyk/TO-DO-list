@@ -17,6 +17,6 @@ RSpec.describe Task, type: :model do
   end
 
   describe 'associations' do
-    it { should belong_to(:to_do_list).class_name('ToDoList') }
+    it { is_expected.to belong_to(:to_do_list).class_name('ToDoList') }
   end
 end
