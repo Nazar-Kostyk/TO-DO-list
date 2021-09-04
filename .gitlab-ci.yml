@@ -28,7 +28,7 @@ stages:
     - bundle config set --local path 'vendor'
     - bundle install --jobs $(nproc) "${FLAGS[@]}"
     - cp config/database.gitlab.yml config/database.yml
-    - bundle exec rake db:setup
+    - RAILS_ENV=test bundle exec rake db:setup
 
 rubocop:
   extends: .build
