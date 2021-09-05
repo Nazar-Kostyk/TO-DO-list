@@ -1,4 +1,27 @@
----
-inherit_from: .rubocop-rails.yml
+require:
+  - rubocop-performance
+  - rubocop-rails
+  - rubocop-rake
+  - rubocop-rspec
+
 AllCops:
-  TargetRubyVersion: 3.0.2
+  NewCops: enable
+  Exclude:
+    - 'bin/{bundle,rackup,rake,rspec,rubocop}'
+    - 'builds/**/*'
+
+Metrics/BlockLength:
+  Enabled: false
+
+Style/Documentation:
+  Enabled: false
+Style/DocumentationMethod:
+  Enabled: false
+
+Rails/FilePath:
+  EnforcedStyle: arguments
+
+RSpec/MultipleExpectations:
+  Enabled: false
+RSpec/NamedSubject:
+  Enabled: false

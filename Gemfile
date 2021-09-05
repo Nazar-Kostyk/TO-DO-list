@@ -31,6 +31,7 @@ group :development do
   gem 'rubocop', '>= 1.20.0', require: false
   gem 'rubocop-performance', '>= 1.11.5'
   gem 'rubocop-rails', '>= 2.11.3'
+  gem 'rubocop-rake', '>= 0.6.0'
   gem 'rubocop-rspec', '>= 2.4.0'
   gem 'spring', '>= 2.1.1'
 end

@@ -14,5 +14,9 @@
 #
 FactoryBot.define do
   factory :admin do
+    name { 'MyString' }
+    surname { 'MyString' }
+    email { 'MyString' }
+    password { 'MyString' }
   end
 end
