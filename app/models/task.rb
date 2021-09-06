@@ -14,6 +14,7 @@
 #
 # Indexes
 #
+#  index_tasks_on_position       (position) UNIQUE
 #  index_tasks_on_to_do_list_id  (to_do_list_id)
 #
 class Task < ApplicationRecord

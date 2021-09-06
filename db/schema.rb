@@ -21,9 +21,10 @@ ActiveRecord::Schema.define(version: 20_210_829_170_720) do
     t.string 'name', limit: 255, null: false
     t.string 'surname', limit: 255, null: false
     t.string 'email', null: false
-    t.string 'password', null: false
+    t.string 'password_digest', null: false
     t.datetime 'created_at', precision: 6, null: false
     t.datetime 'updated_at', precision: 6, null: false
+    t.index ['email'], name: 'index_admins_on_email', unique: true
   end
 
   create_table 'tasks', id: :uuid, default: -> { 'gen_random_uuid()' }, force: :cascade do |t|
@@ -33,6 +34,7 @@ ActiveRecord::Schema.define(version: 20_210_829_170_720) do
     t.bigint 'to_do_list_id'
     t.datetime 'created_at', precision: 6, null: false
     t.datetime 'updated_at', precision: 6, null: false
+    t.index ['position'], name: 'index_tasks_on_position', unique: true
     t.index ['to_do_list_id'], name: 'index_tasks_on_to_do_list_id'
   end
 
@@ -49,8 +51,9 @@ ActiveRecord::Schema.define(version: 20_210_829_170_720) do
     t.string 'name', limit: 255, null: false
     t.string 'surname', limit: 255, null: false
     t.string 'email', null: false
-    t.string 'password', null: false
+    t.string 'password_digest', null: false
     t.datetime 'created_at', precision: 6, null: false
     t.datetime 'updated_at', precision: 6, null: false
+    t.index ['email'], name: 'index_users_on_email', unique: true
   end
 end
