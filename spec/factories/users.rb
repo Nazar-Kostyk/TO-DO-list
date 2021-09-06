@@ -14,9 +14,9 @@
 #
 FactoryBot.define do
   factory :user do
-    name { 'MyString' }
-    surname { 'MyString' }
-    email { 'MyString' }
-    password { 'MyString' }
+    name { Faker::Name.first_name }
+    surname { Faker::Name.last_name }
+    email { Faker::Internet.email }
+    password { Faker::Lorem.word }
   end
 end

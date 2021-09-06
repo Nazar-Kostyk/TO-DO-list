@@ -18,7 +18,9 @@
 #
 FactoryBot.define do
   factory :task do
-    description { 'MyText' }
-    position { 1 }
+    to_do_list_id { SecureRandom.uuid }
+    title { Faker::Lorem.sentence }
+    is_completed { Faker::Boolean.boolean }
+    sequence(:position)
   end
 end
