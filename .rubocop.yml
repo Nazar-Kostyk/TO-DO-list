@@ -9,6 +9,7 @@ AllCops:
   Exclude:
     - 'bin/{bundle,rackup,rake,rspec,rubocop}'
     - 'builds/**/*'
+    - 'vendor/**/*'
 
 Metrics/BlockLength:
   Enabled: false
