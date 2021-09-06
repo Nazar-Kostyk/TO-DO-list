@@ -18,17 +18,18 @@ ActiveRecord::Schema.define(version: 20_210_829_170_720) do
   enable_extension 'plpgsql'
 
   create_table 'admins', id: :uuid, default: -> { 'gen_random_uuid()' }, force: :cascade do |t|
-    t.string 'name'
-    t.string 'surname'
-    t.string 'email'
-    t.string 'password'
+    t.string 'name', limit: 255, null: false
+    t.string 'surname', limit: 255, null: false
+    t.string 'email', null: false
+    t.string 'password', null: false
     t.datetime 'created_at', precision: 6, null: false
     t.datetime 'updated_at', precision: 6, null: false
   end
 
   create_table 'tasks', id: :uuid, default: -> { 'gen_random_uuid()' }, force: :cascade do |t|
-    t.text 'description'
-    t.integer 'position'
+    t.string 'title', limit: 255, default: 'Untitled'
+    t.integer 'position', null: false
+    t.boolean 'is_completed', default: false
     t.bigint 'to_do_list_id'
     t.datetime 'created_at', precision: 6, null: false
     t.datetime 'updated_at', precision: 6, null: false
@@ -36,7 +37,7 @@ ActiveRecord::Schema.define(version: 20_210_829_170_720) do
   end
 
   create_table 'to_do_lists', id: :uuid, default: -> { 'gen_random_uuid()' }, force: :cascade do |t|
-    t.string 'name'
+    t.string 'title', limit: 255, default: 'Untitled'
     t.text 'description'
     t.bigint 'user_id'
     t.datetime 'created_at', precision: 6, null: false
@@ -45,10 +46,10 @@ ActiveRecord::Schema.define(version: 20_210_829_170_720) do
   end
 
   create_table 'users', id: :uuid, default: -> { 'gen_random_uuid()' }, force: :cascade do |t|
-    t.string 'name'
-    t.string 'surname'
-    t.string 'email'
-    t.string 'password'
+    t.string 'name', limit: 255, null: false
+    t.string 'surname', limit: 255, null: false
+    t.string 'email', null: false
+    t.string 'password', null: false
     t.datetime 'created_at', precision: 6, null: false
     t.datetime 'updated_at', precision: 6, null: false
   end

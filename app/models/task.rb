@@ -5,11 +5,16 @@
 # Table name: tasks
 #
 #  id            :uuid             not null, primary key
-#  description   :text
-#  position      :integer
-#  to_do_list_id :bigint
+#  is_completed  :boolean          default(FALSE)
+#  position      :integer          not null
+#  title         :string(255)      default("Untitled")
 #  created_at    :datetime         not null
 #  updated_at    :datetime         not null
+#  to_do_list_id :bigint
+#
+# Indexes
+#
+#  index_tasks_on_to_do_list_id  (to_do_list_id)
 #
 class Task < ApplicationRecord
   belongs_to :to_do_list

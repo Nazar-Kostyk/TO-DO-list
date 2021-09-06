@@ -5,11 +5,15 @@
 # Table name: to_do_lists
 #
 #  id          :uuid             not null, primary key
-#  name        :string
 #  description :text
-#  user_id     :bigint
+#  title       :string(255)      default("Untitled")
 #  created_at  :datetime         not null
 #  updated_at  :datetime         not null
+#  user_id     :bigint
+#
+# Indexes
+#
+#  index_to_do_lists_on_user_id  (user_id)
 #
 RSpec.describe ToDoList, type: :model do
   it 'has correct parrent' do
