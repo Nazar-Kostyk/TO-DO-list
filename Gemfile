@@ -7,8 +7,10 @@ ruby File.read('.ruby-version').strip
 
 gem 'rails', '~> 6.1.4', '>= 6.1.4.1'
 
+gem 'bcrypt', '>= 3.1.16'
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.4.4', require: false
+gem 'jwt', '>= 2.2.3'
 gem 'jwt_sessions', '>= 2.6.0'
 gem 'pg', '>= 1.1'
 gem 'puma', '~> 5.0'

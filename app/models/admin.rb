@@ -17,4 +17,5 @@
 #  index_admins_on_email  (email) UNIQUE
 #
 class Admin < ApplicationRecord
+  has_secure_password
 end
