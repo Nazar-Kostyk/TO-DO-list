@@ -30,4 +30,9 @@
 # available at https://guides.rubyonrails.org/i18n.html.
 
 en:
-  hello: "Hello world"
+  dry_validation:
+    invalid: "The %{field} field is invalid."
+    missing: "The %{field} field is missing."
+    not_unique: "The %{field} field is not unique."
+    under_minimum_length: "The %{field} field should be at least %{length} characters long."
+    exceeds_maximum_length: "The %{field} field exceeds the maximum character length of %{length}."

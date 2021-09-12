@@ -10,6 +10,7 @@ gem 'rails', '~> 6.1.4', '>= 6.1.4.1'
 gem 'bcrypt', '>= 3.1.16'
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.4.4', require: false
+gem 'dry-validation', '>= 1.6.0'
 gem 'jwt', '>= 2.2.3'
 gem 'jwt_sessions', '>= 2.6.0'
 gem 'pg', '>= 1.1'
@@ -40,6 +41,7 @@ end
 
 group :test do
   gem 'database_cleaner-active_record', '~> 2.0.1'
+  gem 'dry-validation-matchers', '>= 1.2.2'
   gem 'faker', '>= 2.19.0'
   gem 'prosopite', '>= 1.0.1'
   gem 'rspec-rails', '~> 5.0.0'
