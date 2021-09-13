@@ -55,6 +55,10 @@ module Users
           )
         end
       end
+
+      rule(:password_confirmation) do
+        key.failure(I18n.t('dry_validation.passwords_do_not_match')) if value != values[:password]
+      end
     end
   end
 end
