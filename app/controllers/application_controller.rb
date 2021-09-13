@@ -2,9 +2,6 @@
 
 # ApplicationController: base controller
 class ApplicationController < ActionController::API
-  include JWTSessions::RailsAuthorization
-  rescue_from JWTSessions::Errors::Unauthorized, with: :not_authorized
-
   def authorize_request
     header = request.headers['Authorization']
     header = header.split(' ').last if header
@@ -17,11 +14,5 @@ class ApplicationController < ActionController::API
     rescue JWT::DecodeError => e
       render json: { errors: e.message }, status: :unauthorized
     end
-  end
-
-  private
-
-  def not_authorized
-    render json: { error: 'Not authorized' }, status: :unauthorized
   end
 end
