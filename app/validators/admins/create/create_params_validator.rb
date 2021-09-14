@@ -1,25 +1,27 @@
+# frozen_string_literal: true
+
 module Admins
   module Create
     class CreateParamsValidator < Common::BaseValidator
       params(Common::Schemas::UserSchema)
 
-      rule(:name) do
-        key.failure('Invalid name size')  if value.size > 255
+      register_macro(:passwords_match) do
+        key.failure(:passwords_do_not_match) if value != values[:password]
       end
 
-      rule(:surname) do
-        key.failure('Invalid surname size') if value.size > 255
-      end
+      rule(:name).validate(max_length: Admin::NAME_MAX_LENGTH)
+      
+      rule(:surname).validate(max_length: Admin::SURNAME_MAX_LENGTH)
+      
+      rule(:email).validate(min_length: Admin::EMAIL_MIN_LENGTH)
+      rule(:email).validate(max_length: Admin::EMAIL_MAX_LENGTH)
+      rule(:email).validate(:email_format)
+      rule(:email).validate(:email_uniqueness)
+      
+      rule(:password).validate(min_length: Admin::PASSWORD_MIN_LENGTH)
+      rule(:password).validate(max_length: Admin::PASSWORD_MAX_LENGTH)
 
-      rule(:email) do
-        key.failure('Invalid email size') if value.size < 5 || value.size > 64
-        key.failure('Invalid email format') unless follows_email_format?(value)
-        key.failure('Email is not unique') if !rule_error? && !email_is_unique?(value)
-      end
-
-      rule(:password) do
-        key.failure('Invalid password size') if value.size < 8 || value.size > 64
-      end
+      rule(:password_confirmation).validate(:passwords_match)
     end
   end
 end
