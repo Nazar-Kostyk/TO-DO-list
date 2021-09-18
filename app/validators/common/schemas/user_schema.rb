@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Common
   module Schemas
     UserSchema = Dry::Schema.Params do

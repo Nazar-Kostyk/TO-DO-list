@@ -10,14 +10,14 @@ module Users
       end
 
       rule(:name).validate(max_length: User::NAME_MAX_LENGTH)
-      
+
       rule(:surname).validate(max_length: User::SURNAME_MAX_LENGTH)
-      
+
       rule(:email).validate(min_length: User::EMAIL_MIN_LENGTH)
       rule(:email).validate(max_length: User::EMAIL_MAX_LENGTH)
       rule(:email).validate(:email_format)
       rule(:email).validate(:email_uniqueness)
-      
+
       rule(:password).validate(min_length: User::PASSWORD_MIN_LENGTH)
       rule(:password).validate(max_length: User::PASSWORD_MAX_LENGTH)
 

@@ -23,6 +23,6 @@ class Admin < ApplicationRecord
   EMAIL_MAX_LENGTH = 64
   PASSWORD_MIN_LENGTH = 8
   PASSWORD_MAX_LENGTH = 64
-  
+
   has_secure_password
 end

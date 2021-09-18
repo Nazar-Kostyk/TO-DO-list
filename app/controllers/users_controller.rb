@@ -8,11 +8,19 @@ class UsersController < ApplicationController
 
     if validator.success?
       @user = User.new(permitted_create_params.slice(:name, :surname, :email, :password))
-      @user.save!
-      render json: @user, status: :created
+      if @user.save
+        render json: @user, status: :created
+      else
+        render json: { errorDetails: 'Database error occurred.' }, status: :unprocessable_entity
+      end
     else
       render json: validator.errors.to_h
     end
+  end
+
+  def update
+    # TODO: implement update user feature
+    # permitted_update_params: :name, :surname, :email, :old_password, :new_password, :password_confirmation
   end
 
   private
