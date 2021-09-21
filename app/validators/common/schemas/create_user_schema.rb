@@ -2,7 +2,7 @@
 
 module Common
   module Schemas
-    UserSchema = Dry::Schema.Params do
+    CreateUserSchema = Dry::Schema.Params do
       required(:name).filled(:string)
       required(:surname).filled(:string)
       required(:email).filled(:string)

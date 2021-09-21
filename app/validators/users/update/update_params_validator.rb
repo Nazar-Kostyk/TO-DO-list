@@ -3,37 +3,30 @@
 module Users
   module Update
     class UpdateParamsValidator < Common::BaseValidator
-      params do
-        optional(:name).filled(:string)
-        optional(:surname).filled(:string)
-        optional(:email).filled(:string)
-        required(:current_password).filled(:string)
-        optional(:new_password).filled(:string)
-        optional(:new_password_confirmation).filled(:string)
-      end
+      params(Common::Schemas::UpdateUserSchema)
 
       register_macro(:min_length) do |macro:|
         min = macro.args[0]
-  
-        key.failure(:under_minimum_length, field: :email, length: min) if value.size < min
+
+        key.failure(:under_minimum_length, field: key.path.keys[0], length: min) if key? && value.size < min
       end
-  
+
       register_macro(:max_length) do |macro:|
         max = macro.args[0]
-  
-        key.failure(:exceeds_maximum_length, field: :email, length: max) if value.size > max
+
+        key.failure(:exceeds_maximum_length, field: key.path.keys[0], length: max) if key? && value.size > max
       end
-  
-      register_macro(:email_format) do
-        key.failure(:invalid, field: :email) unless EMAIL_FORMAT.match?(value)
-      end
-  
+
       register_macro(:uuid_format) do
-        key.failure(:invalid, field: :email) unless UUID_FORMAT.match?(value)
+        key.failure(:invalid, field: key.path.keys[0]) if key? && !UUID_FORMAT.match?(value)
       end
-  
+
+      register_macro(:email_format) do
+        key.failure(:invalid, field: :email) if key? && !EMAIL_FORMAT.match?(value)
+      end
+
       register_macro(:email_uniqueness) do
-        key.failure(:not_unique, field: :email) if !rule_error?(:email) && User.exists?(email: value)
+        key.failure(:not_unique, field: :email) if key? && !rule_error?(:email) && User.exists?(email: value)
       end
 
       register_macro(:passwords_match) do

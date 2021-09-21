@@ -22,9 +22,9 @@ class UsersController < ApplicationController
     validator = Users::Update::UpdateParamsValidator.new.call(permitted_update_params)
 
     if validator.success?
-        return render json: { errorDetails: 'Wrong password entered.' } unless correct_password_provdided?
+      return render json: { errorDetails: 'Wrong password entered.' } unless correct_password_provdided?
 
-        if @current_user.update(map_request_params_to_model_params)
+      if @current_user.update(map_request_params_to_model_params)
         render json: @user, status: :updated
       else
         render json: { errorDetails: 'Database error occurred.' }, status: :unprocessable_entity
@@ -51,6 +51,8 @@ class UsersController < ApplicationController
   def map_request_params_to_model_params
     request_params = permitted_update_params
 
-    request_params.slice(:name, :surname, :email).merge({password: request_params[:new_password]}).compact
+    request_params.slice(:name, :surname, :email)
+                  .merge({ password: request_params[:new_password] })
+                  .compact
   end
 end
