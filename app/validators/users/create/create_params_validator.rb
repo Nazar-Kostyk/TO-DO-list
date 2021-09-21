@@ -17,9 +17,9 @@ module Users
         key.failure(:exceeds_maximum_length, field: key.path.keys[0], length: max) if value.size > max
       end
 
-      register_macro(:uuid_format) do
-        key.failure(:invalid, field: key.path.keys[0]) unless UUID_FORMAT.match?(value)
-      end
+      # register_macro(:uuid_format) do
+      #   key.failure(:invalid, field: key.path.keys[0]) unless UUID_FORMAT.match?(value)
+      # end
 
       register_macro(:email_format) do
         key.failure(:invalid, field: :email) unless EMAIL_FORMAT.match?(value)

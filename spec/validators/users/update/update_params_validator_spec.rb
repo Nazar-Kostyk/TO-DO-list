@@ -1,5 +1,4 @@
 # frozen_string_literal: true
 
-RSpec.describe Users::Update::UpdateParamsValidator, type: %i[dry_validation] do
-
-end
+# RSpec.describe Users::Update::UpdateParamsValidator do
+# end
