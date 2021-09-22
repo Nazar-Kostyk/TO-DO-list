@@ -38,3 +38,6 @@ en:
       under_minimum_length: "The %{field} field should be at least %{length} characters long."
       exceeds_maximum_length: "The %{field} field exceeds the maximum character length of %{length}."
       passwords_do_not_match: "Passwords do not match."
+  messages:
+    database_error: 'Database error occurred.'
+    wrong_password: 'Wrong password entered.'

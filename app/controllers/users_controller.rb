@@ -11,10 +11,10 @@ class UsersController < ApplicationController
       if @user.save
         render json: @user, status: :created
       else
-        render json: { errorDetails: 'Database error occurred.' }, status: :unprocessable_entity
+        render json: { errorDetails: I18n.t('messages.database_error') }, status: :unprocessable_entity
       end
     else
-      render json: validator.errors.to_h
+      render json: validator.errors.to_h, status: :bad_request
     end
   end
 
@@ -22,15 +22,18 @@ class UsersController < ApplicationController
     validator = Users::Update::UpdateParamsValidator.new.call(permitted_update_params)
 
     if validator.success?
-      return render json: { errorDetails: 'Wrong password entered.' } unless correct_password_provdided?
+      unless correct_password_provdided?
+        return render json: { errorDetails: I18n.t('messages.wrong_password') },
+                      status: :bad_request
+      end
 
       if @current_user.update(map_request_params_to_model_params)
-        render json: @user, status: :updated
+        render json: @current_user, status: :ok
       else
-        render json: { errorDetails: 'Database error occurred.' }, status: :unprocessable_entity
+        render json: { errorDetails: I18n.t('messages.database_error') }, status: :unprocessable_entity
       end
     else
-      render json: validator.errors.to_h
+      render json: validator.errors.to_h, status: :bad_request
     end
   end
 

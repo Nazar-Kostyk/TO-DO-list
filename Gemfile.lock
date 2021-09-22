@@ -138,6 +138,9 @@ GEM
     i18n (1.8.10)
       concurrent-ruby (~> 1.0)
     json (2.5.1)
+    json_matchers (0.11.1)
+      json_schema
+    json_schema (0.21.0)
     jwt (2.2.3)
     lefthook (0.7.6)
     listen (3.7.0)
@@ -303,6 +306,7 @@ DEPENDENCIES
   dry-validation-matchers (>= 1.2.2)
   factory_bot_rails (>= 6.2.0)
   faker (>= 2.19.0)
+  json_matchers (>= 0.11)
   jwt (>= 2.2.3)
   lefthook (>= 0.7.6)
   listen (~> 3.3)
