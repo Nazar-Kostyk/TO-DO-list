@@ -4,7 +4,7 @@ RSpec.describe Users::Create::CreateParamsValidator do
   subject(:validator) { described_class.new.call(input) }
 
   context 'when valid params provided' do
-    let(:password) { Faker::Lorem.characters(number: 10) }
+    let(:password) { Faker::Lorem.characters(number: User::PASSWORD_MIN_LENGTH + 1) }
     let(:input) do
       {
         name: Faker::Name.first_name,
@@ -176,22 +176,24 @@ RSpec.describe Users::Create::CreateParamsValidator do
   end
 
   context 'when password_confirmation is invalid' do
-    context 'when password is missing' do
+    context 'when password_confirmation is missing' do
       let(:input) { {} }
 
       it { is_expected.to be_a_failure }
     end
 
     context 'when password_confirmation is not a string' do
-      let(:input) { { password: 1 } }
+      let(:input) { { password_confirmation: 1 } }
 
       it { is_expected.to be_a_failure }
     end
 
     context 'when password_confirmation does not match the password' do
       let(:input) do
-        { password: Faker::Lorem.characters(number: User::PASSWORD_MIN_LENGTH),
-          password_confirmation: Faker::Lorem.characters(number: User::PASSWORD_MIN_LENGTH + 1) }
+        {
+          password: Faker::Lorem.characters(number: User::PASSWORD_MIN_LENGTH),
+          password_confirmation: Faker::Lorem.characters(number: User::PASSWORD_MIN_LENGTH + 1)
+        }
       end
       let(:expected_error_message) { I18n.t('dry_validation.errors.passwords_do_not_match') }
 
