@@ -32,12 +32,25 @@
 en:
   dry_validation:
     errors:
+      key?: "The required field is missing."
       invalid: "The %{field} field is invalid."
-      missing: "The %{field} field is missing."
       not_unique: "The %{field} field is not unique."
       under_minimum_length: "The %{field} field should be at least %{length} characters long."
       exceeds_maximum_length: "The %{field} field exceeds the maximum character length of %{length}."
       passwords_do_not_match: "Passwords do not match."
-  messages:
-    database_error: 'Database error occurred.'
-    wrong_password: 'Wrong password entered.'
+  error_messages:
+    database_error:
+      title: "Database error"
+      detail: "An error occurred while communicating with the database."
+    bad_credentials:
+      title: "Bad credentials"
+      detail: "Wrong email or password entered."
+    wrong_password:
+      title: "Bad credentials"
+      detail: "Wrong password entered."
+    unauthorized_request:
+      title: "Unauthorized request"
+      detail: "Authorization token provided is invalid or has expired."
+    user_not_found:
+      title: "Could not find user"
+      detail: "This user does not exist, or has been deleted."

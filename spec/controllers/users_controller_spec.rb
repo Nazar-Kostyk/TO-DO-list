@@ -38,7 +38,17 @@ RSpec.describe UsersController, :controller do
           allow_any_instance_of(User).to receive(:save).and_return(nil)
         end
 
-        let(:expected_body) { { 'errorDetails' => I18n.t('messages.database_error') } }
+        let(:expected_body) do
+          {
+            'errors' => [
+              {
+                'code' => 422,
+                'title' => I18n.t('error_messages.database_error.title'),
+                'detail' => I18n.t('error_messages.database_error.detail')
+              }
+            ]
+          }
+        end
 
         it 'returns the bad request' do
           endpoint_call
@@ -52,13 +62,25 @@ RSpec.describe UsersController, :controller do
     context 'when invalid params provided' do
       context 'when required params are missing' do
         let(:params) { {} }
-        let(:expected_body) { Users::Create::CreateParamsValidator.new.call(params).errors.to_h.to_json }
+        let(:expected_body) do
+          {
+            'errors' =>
+              %i[name surname email password password_confirmation].map do |attribute|
+                {
+                  'source' => {
+                    'pointer' => "/data/attributes/#{attribute}"
+                  },
+                  'detail' => I18n.t('dry_validation.errors.key?')
+                }
+              end
+          }
+        end
 
         it 'returns the bad request' do
           endpoint_call
 
           expect(response).to be_bad_request
-          expect(response.body).to eq(expected_body)
+          expect(JSON.parse(response.body)).to eq(expected_body)
         end
       end
     end
@@ -104,7 +126,17 @@ RSpec.describe UsersController, :controller do
           let(:expected_params) do
             params.slice(:name, :surname, :email).merge({ password: params[:new_password] }).with_indifferent_access
           end
-          let(:expected_body) { { 'errorDetails' => I18n.t('messages.database_error') } }
+          let(:expected_body) do
+            {
+              'errors' => [
+                {
+                  'code' => 422,
+                  'title' => I18n.t('error_messages.database_error.title'),
+                  'detail' => I18n.t('error_messages.database_error.detail')
+                }
+              ]
+            }
+          end
 
           it 'returns the bad request' do
             endpoint_call
@@ -118,24 +150,45 @@ RSpec.describe UsersController, :controller do
       context 'when invalid params provided' do
         context 'when required field is missing' do
           let(:params) { {} }
-          let(:expected_body) { Users::Update::UpdateParamsValidator.new.call(params).errors.to_h.to_json }
+          let(:expected_body) do
+            {
+              'errors' => [
+                {
+                  'source' => {
+                    'pointer' => '/data/attributes/current_password'
+                  },
+                  'detail' => I18n.t('dry_validation.errors.key?')
+                }
+              ]
+            }
+          end
 
           it 'returns the bad request' do
             endpoint_call
 
             expect(response).to be_bad_request
-            expect(response.body).to eq(expected_body)
+            expect(JSON.parse(response.body)).to eq(expected_body)
           end
         end
 
         context 'when current_password is invalid' do
           let(:params) { { current_password: Faker::Lorem.characters(number: User::PASSWORD_MIN_LENGTH) } }
-          let(:expected_body) { { 'errorDetails' => I18n.t('messages.wrong_password') } }
+          let(:expected_body) do
+            {
+              'errors' => [
+                {
+                  'code' => 401,
+                  'title' => I18n.t('error_messages.wrong_password.title'),
+                  'detail' => I18n.t('error_messages.wrong_password.detail')
+                }
+              ]
+            }
+          end
 
           it 'returns the bad request' do
             endpoint_call
 
-            expect(response).to be_bad_request
+            expect(response).to be_unauthorized
             expect(JSON.parse(response.body)).to eq(expected_body)
           end
         end
@@ -145,12 +198,22 @@ RSpec.describe UsersController, :controller do
     context 'when Authorization header is invalid' do
       let(:authorization_header) { Faker::Lorem.characters(number: 128) }
       let(:params) { {} }
-      let(:expected_body) { { 'errorDetails' => 'Not enough or too many segments' } }
+      let(:expected_body) do
+        {
+          'errors' => [
+            {
+              'code' => 401,
+              'title' => I18n.t('error_messages.unauthorized_request.title'),
+              'detail' => I18n.t('error_messages.unauthorized_request.detail')
+            }
+          ]
+        }
+      end
 
       it 'returns the unauthorized request' do
         endpoint_call
 
-        expect(response).to have_http_status(:unauthorized)
+        expect(response).to be_unauthorized
         expect(JSON.parse(response.body)).to eq(expected_body)
       end
     end

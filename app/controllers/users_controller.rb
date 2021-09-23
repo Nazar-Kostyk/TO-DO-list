@@ -9,9 +9,9 @@ class UsersController < ApplicationController
     if validator.success?
       @user = User.new(permitted_create_params.slice(:name, :surname, :email, :password))
       if @user.save
-        render_response(user: @user, status: :created)
+        render_json_response(user: @user, status: :created)
       else
-        render json: { errorDetails: I18n.t('messages.database_error') }, status: :unprocessable_entity
+        render_json_error(status: :unprocessable_entity, error_key: 'database_error')
       end
     else
       render_json_validation_error(validator.errors.to_h)
@@ -22,15 +22,12 @@ class UsersController < ApplicationController
     validator = Users::Update::UpdateParamsValidator.new.call(permitted_update_params)
 
     if validator.success?
-      unless correct_password_provdided?
-        return render json: { errorDetails: I18n.t('messages.wrong_password') },
-                      status: :bad_request
-      end
+      return render_json_error(status: :unauthorized, error_key: 'wrong_password') unless correct_password_provdided?
 
       if @current_user.update(map_request_params_to_model_params)
-        render_response(user: @current_user, status: :ok)
+        render_json_response(user: @current_user, status: :ok)
       else
-        render json: { errorDetails: I18n.t('messages.database_error') }, status: :unprocessable_entity
+        render_json_error(status: :unprocessable_entity, error_key: 'database_error')
       end
     else
       render_json_validation_error(validator.errors.to_h)
@@ -59,24 +56,7 @@ class UsersController < ApplicationController
                   .compact
   end
 
-  def render_response(user:, status: :ok)
+  def render_json_response(user:, status: :ok)
     render json: UserSerializer.new(user).serializable_hash, status: status
-  end
-
-  def render_json_validation_error(errors_hash)
-    errors =
-      errors_hash.map do |attribute_name, error_details|
-        error_details.map do |detail|
-          {
-            source: {
-              pointer: "/data/attributes/#{attribute_name}"
-            },
-            title: 'Invalid Attribute',
-            detail: detail
-          }
-        end
-      end.flatten
-
-    render json: { errors: errors }, status: :bad_request
   end
 end
