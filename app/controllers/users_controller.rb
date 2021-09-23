@@ -9,12 +9,12 @@ class UsersController < ApplicationController
     if validator.success?
       @user = User.new(permitted_create_params.slice(:name, :surname, :email, :password))
       if @user.save
-        render json: @user, status: :created
+        render_response(user: @user, status: :created)
       else
         render json: { errorDetails: I18n.t('messages.database_error') }, status: :unprocessable_entity
       end
     else
-      render json: validator.errors.to_h, status: :bad_request
+      render_json_validation_error(validator.errors.to_h)
     end
   end
 
@@ -28,12 +28,12 @@ class UsersController < ApplicationController
       end
 
       if @current_user.update(map_request_params_to_model_params)
-        render json: @current_user, status: :ok
+        render_response(user: @current_user, status: :ok)
       else
         render json: { errorDetails: I18n.t('messages.database_error') }, status: :unprocessable_entity
       end
     else
-      render json: validator.errors.to_h, status: :bad_request
+      render_json_validation_error(validator.errors.to_h)
     end
   end
 
@@ -57,5 +57,26 @@ class UsersController < ApplicationController
     request_params.slice(:name, :surname, :email)
                   .merge({ password: request_params[:new_password] })
                   .compact
+  end
+
+  def render_response(user:, status: :ok)
+    render json: UserSerializer.new(user).serializable_hash, status: status
+  end
+
+  def render_json_validation_error(errors_hash)
+    errors =
+      errors_hash.map do |attribute_name, error_details|
+        error_details.map do |detail|
+          {
+            source: {
+              pointer: "/data/attributes/#{attribute_name}"
+            },
+            title: 'Invalid Attribute',
+            detail: detail
+          }
+        end
+      end.flatten
+
+    render json: { errors: errors }, status: :bad_request
   end
 end

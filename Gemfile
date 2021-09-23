@@ -7,6 +7,7 @@ ruby File.read('.ruby-version').strip
 
 gem 'rails', '~> 6.1.4', '>= 6.1.4.1'
 
+gem 'active_model_serializers', '~> 0.10.0'
 gem 'bcrypt', '>= 3.1.16'
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.4.4', require: false
