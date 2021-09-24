@@ -41,7 +41,6 @@ end
 
 group :test do
   gem 'database_cleaner-active_record', '~> 2.0.1'
-  gem 'dry-validation-matchers', '>= 1.2.2'
   gem 'faker', '>= 2.19.0'
   gem 'json_matchers', '>= 0.11'
   gem 'prosopite', '>= 1.0.1'

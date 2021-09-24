@@ -37,7 +37,7 @@ en:
       not_unique: "The %{field} field is not unique."
       under_minimum_length: "The %{field} field should be at least %{length} characters long."
       exceeds_maximum_length: "The %{field} field exceeds the maximum character length of %{length}."
-      passwords_do_not_match: "Passwords do not match."
+      passwords_do_not_match: "Password and password confirmation do not match."
   error_messages:
     database_error:
       title: "Database error"
