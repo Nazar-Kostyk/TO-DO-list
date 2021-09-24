@@ -3,6 +3,10 @@
 class UsersController < ApplicationController
   before_action :authorize_request, except: :create
 
+  def show
+    render_json_response(user: @current_user, status: :ok)
+  end
+
   def create
     validator = Users::Create::CreateParamsValidator.new.call(permitted_create_params)
 

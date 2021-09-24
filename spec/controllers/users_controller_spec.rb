@@ -5,6 +5,47 @@ RSpec.describe UsersController, :controller do
     expect(controller).to be_a_kind_of(ApplicationController)
   end
 
+  describe '#show' do
+    let(:endpoint_call) do
+      request.headers['Authorization'] = authorization_header
+      get :show
+    end
+
+    context 'when Authorization header is valid' do
+      let!(:user) { create(:user) }
+      let(:authorization_header) { JsonWebToken.encode(user_id: user.id) }
+
+      it 'returns correct response' do
+        endpoint_call
+
+        expect(response).to be_ok
+        expect(JSON.parse(response.body)).to match_json_schema('users/single')
+      end
+    end
+
+    context 'when Authorization header is invalid' do
+      let(:authorization_header) { Faker::Lorem.characters(number: 128) }
+      let(:expected_body) do
+        {
+          'errors' => [
+            {
+              'code' => 401,
+              'title' => I18n.t('error_messages.unauthorized_request.title'),
+              'detail' => I18n.t('error_messages.unauthorized_request.detail')
+            }
+          ]
+        }
+      end
+
+      it 'returns the unauthorized request' do
+        endpoint_call
+
+        expect(response).to be_unauthorized
+        expect(JSON.parse(response.body)).to eq(expected_body)
+      end
+    end
+  end
+
   describe '#create' do
     let(:endpoint_call) do
       post :create, params: params
@@ -92,10 +133,9 @@ RSpec.describe UsersController, :controller do
       put :update, params: params
     end
 
-    let(:password) { Faker::Lorem.characters(number: User::PASSWORD_MIN_LENGTH) }
-    let!(:user) { create(:user, password: password) }
-
     context 'when Authorization header is valid' do
+      let(:password) { Faker::Lorem.characters(number: User::PASSWORD_MIN_LENGTH) }
+      let!(:user) { create(:user, password: password) }
       let(:authorization_header) { JsonWebToken.encode(user_id: user.id) }
 
       context 'when valid params provided' do
