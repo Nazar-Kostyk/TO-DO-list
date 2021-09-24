@@ -1,14 +1,14 @@
 # frozen_string_literal: true
 
-RSpec.describe UsersController, :controller do
+RSpec.describe UsersController, type: :request do
   it 'has correct parent' do
-    expect(controller).to be_a_kind_of(ApplicationController)
+    expect(subject).to be_a_kind_of(ApplicationController)
   end
 
   describe '#show' do
     let(:endpoint_call) do
-      request.headers['Authorization'] = authorization_header
-      get :show
+      headers = { 'Authorization' => authorization_header }
+      get user_path, headers: headers
     end
 
     context 'when Authorization header is valid' do
@@ -48,7 +48,7 @@ RSpec.describe UsersController, :controller do
 
   describe '#create' do
     let(:endpoint_call) do
-      post :create, params: params
+      post user_path, params: params
     end
 
     context 'when valid params provided' do
@@ -129,8 +129,8 @@ RSpec.describe UsersController, :controller do
 
   describe '#update' do
     let(:endpoint_call) do
-      request.headers['Authorization'] = authorization_header
-      put :update, params: params
+      headers = { 'Authorization' => authorization_header }
+      put user_path, params: params, headers: headers
     end
 
     context 'when Authorization header is valid' do
