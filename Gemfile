@@ -15,6 +15,9 @@ gem 'jsonapi-serializer', '>= 2.2.0'
 gem 'jwt', '>= 2.2.3'
 gem 'pg', '>= 1.1'
 gem 'puma', '~> 5.0'
+gem 'redis', '~> 4.4.0'
+gem 'redis-namespace', '~> 1.8.1'
+gem 'redis-rails', '~> 5.0.2'
 
 group :development, :test do
   gem 'byebug', '>= 11.1.3', platforms: %i[mri mingw x64_mingw]
