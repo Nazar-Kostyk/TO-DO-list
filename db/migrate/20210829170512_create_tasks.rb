@@ -6,7 +6,7 @@ class CreateTasks < ActiveRecord::Migration[6.1]
       t.string :title, limit: 255, default: 'Untitled'
       t.integer :position, index: { unique: true }, null: false
       t.boolean :is_completed, default: false
-      t.belongs_to :to_do_list, index: true
+      t.references :to_do_list, null: false, foreign_key: true, type: :uuid
 
       t.timestamps
     end
