@@ -3,7 +3,10 @@
 class ToDoListsController < ApplicationController
   before_action :authorize_request
 
-  def index; end
+  def index
+    render_json_response(data: @current_user.to_do_lists, serializer: ToDoListSerializer,
+                         options: { is_collection: true })
+  end
 
   def show; end
 
@@ -13,7 +16,7 @@ class ToDoListsController < ApplicationController
     if validator.success?
       @to_do_list = ToDoList.new(model_params)
       if @to_do_list.save
-        render_json_response(to_do_list: @to_do_list, status: :created)
+        render_json_response(data: @to_do_list, serializer: ToDoListSerializer, status: :created)
       else
         render_json_error(status: :unprocessable_entity, error_key: 'database_error')
       end
@@ -32,9 +35,5 @@ class ToDoListsController < ApplicationController
 
   def model_params
     permitted_create_params.merge({ user_id: @current_user.id })
-  end
-
-  def render_json_response(to_do_list:, status: :ok)
-    render json: ToDoListSerializer.new(to_do_list).serializable_hash, status: status
   end
 end

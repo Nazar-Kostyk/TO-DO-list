@@ -16,6 +16,10 @@ class ApplicationController < ActionController::API
     end
   end
 
+  def render_json_response(data:, serializer:, options: {}, status: :ok)
+    render json: serializer.new(data, options).serializable_hash, status: status
+  end
+
   def render_json_error(status:, error_key:)
     code = Rack::Utils::SYMBOL_TO_STATUS_CODE[status] if status.is_a? Symbol
 
