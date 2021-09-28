@@ -34,6 +34,7 @@ en:
     errors:
       key?: "The required field is missing."
       invalid: "The %{field} field is invalid."
+      invalid_format: "The %{field} field does not follow the %{format_name} format."
       not_unique: "The %{field} field is not unique."
       under_minimum_length: "The %{field} field should be at least %{length} characters long."
       exceeds_maximum_length: "The %{field} field exceeds the maximum character length of %{length}."
@@ -54,3 +55,6 @@ en:
     user_not_found:
       title: "Could not find user"
       detail: "This user does not exist, or has been deleted."
+    to_do_list_not_found:
+      title: "Could not find to-do list"
+      detail: "This to-do list does not exist, or has been deleted."

@@ -4,11 +4,21 @@ class ToDoListsController < ApplicationController
   before_action :authorize_request
 
   def index
-    render_json_response(data: @current_user.to_do_lists, serializer: ToDoListSerializer,
+    render_json_response(data: @current_user.to_do_lists,
+                         serializer: ToDoListSerializer,
                          options: { is_collection: true })
   end
 
-  def show; end
+  def show
+    validator = ToDoLists::Show::ShowParamsValidator.new.call(permitted_show_params)
+
+    if validator.success?
+      render_json_response(data: @current_user.to_do_lists.find(permitted_show_params[:id]),
+                           serializer: ToDoListSerializer)
+    else
+      render_json_validation_error(validator.errors.to_h)
+    end
+  end
 
   def create
     validator = ToDoLists::Create::CreateParamsValidator.new.call(permitted_create_params)
@@ -28,6 +38,10 @@ class ToDoListsController < ApplicationController
   def update; end
 
   def destroy; end
+
+  def permitted_show_params
+    params.permit(:id).to_h
+  end
 
   def permitted_create_params
     params.permit(:title, :description).to_h
