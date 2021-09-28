@@ -31,7 +31,7 @@ ActiveRecord::Schema.define(version: 20_210_829_170_720) do
     t.string 'title', limit: 255, default: 'Untitled'
     t.integer 'position', null: false
     t.boolean 'is_completed', default: false
-    t.bigint 'to_do_list_id'
+    t.uuid 'to_do_list_id', null: false
     t.datetime 'created_at', precision: 6, null: false
     t.datetime 'updated_at', precision: 6, null: false
     t.index ['position'], name: 'index_tasks_on_position', unique: true
@@ -41,7 +41,7 @@ ActiveRecord::Schema.define(version: 20_210_829_170_720) do
   create_table 'to_do_lists', id: :uuid, default: -> { 'gen_random_uuid()' }, force: :cascade do |t|
     t.string 'title', limit: 255, default: 'Untitled'
     t.text 'description'
-    t.bigint 'user_id'
+    t.uuid 'user_id', null: false
     t.datetime 'created_at', precision: 6, null: false
     t.datetime 'updated_at', precision: 6, null: false
     t.index ['user_id'], name: 'index_to_do_lists_on_user_id'
@@ -56,4 +56,7 @@ ActiveRecord::Schema.define(version: 20_210_829_170_720) do
     t.datetime 'updated_at', precision: 6, null: false
     t.index ['email'], name: 'index_users_on_email', unique: true
   end
+
+  add_foreign_key 'tasks', 'to_do_lists'
+  add_foreign_key 'to_do_lists', 'users'
 end
