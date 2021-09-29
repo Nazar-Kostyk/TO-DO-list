@@ -21,8 +21,8 @@
 #
 FactoryBot.define do
   factory :to_do_list do
-    user_id { SecureRandom.uuid }
+    user
     title { Faker::Lorem.sentence }
-    description { Faker::Lorem.sentence }
+    description { Faker::Lorem.paragraph }
   end
 end
