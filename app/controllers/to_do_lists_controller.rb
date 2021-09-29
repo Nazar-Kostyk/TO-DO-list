@@ -10,7 +10,7 @@ class ToDoListsController < ApplicationController
   end
 
   def show
-    validator = ToDoLists::Show::ShowParamsValidator.new.call(permitted_show_params)
+    validator = ToDoLists::ShowParamsValidator.new.call(permitted_show_params)
 
     if validator.success?
       render_json_response(data: @current_user.to_do_lists.find(permitted_show_params[:id]),
@@ -21,7 +21,7 @@ class ToDoListsController < ApplicationController
   end
 
   def create
-    validator = ToDoLists::Create::CreateParamsValidator.new.call(permitted_create_params)
+    validator = ToDoLists::CreateParamsValidator.new.call(permitted_create_params)
 
     if validator.success?
       @to_do_list = ToDoList.new(model_params)
@@ -37,7 +37,20 @@ class ToDoListsController < ApplicationController
 
   def update; end
 
-  def destroy; end
+  def destroy
+    validator = ToDoLists::DestroyParamsValidator.new.call(permitted_destroy_params)
+
+    if validator.success?
+      @to_do_list = @current_user.to_do_lists.find(permitted_show_params[:id])
+      if @to_do_list.destroy
+        head :no_content
+      else
+        render_json_error(status: :unprocessable_entity, error_key: 'database_error')
+      end
+    else
+      render_json_validation_error(validator.errors.to_h)
+    end
+  end
 
   def permitted_show_params
     params.permit(:id).to_h
@@ -45,6 +58,10 @@ class ToDoListsController < ApplicationController
 
   def permitted_create_params
     params.permit(:title, :description).to_h
+  end
+
+  def permitted_destroy_params
+    params.permit(:id).to_h
   end
 
   def model_params
