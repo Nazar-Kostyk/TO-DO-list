@@ -35,7 +35,21 @@ class ToDoListsController < ApplicationController
     end
   end
 
-  def update; end
+  def update
+    validator = ToDoLists::UpdateParamsValidator.new.call(permitted_update_params)
+
+    if validator.success?
+      @to_do_list = @current_user.to_do_lists.find(permitted_show_params[:id])
+
+      if @to_do_list.update(permitted_update_params.slice(:title, :description))
+        render_json_response(data: @to_do_list, serializer: ToDoListSerializer)
+      else
+        render_json_error(status: :unprocessable_entity, error_key: 'database_error')
+      end
+    else
+      render_json_validation_error(validator.errors.to_h)
+    end
+  end
 
   def destroy
     validator = ToDoLists::DestroyParamsValidator.new.call(permitted_destroy_params)
@@ -58,6 +72,10 @@ class ToDoListsController < ApplicationController
 
   def permitted_create_params
     params.permit(:title, :description).to_h
+  end
+
+  def permitted_update_params
+    params.permit(:id, :title, :description).to_h
   end
 
   def permitted_destroy_params
