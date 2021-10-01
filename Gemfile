@@ -7,11 +7,17 @@ ruby File.read('.ruby-version').strip
 
 gem 'rails', '~> 6.1.4', '>= 6.1.4.1'
 
+gem 'bcrypt', '>= 3.1.16'
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.4.4', require: false
-gem 'jwt_sessions', '>= 2.6.0'
+gem 'dry-validation', '>= 1.6.0'
+gem 'jsonapi-serializer', '>= 2.2.0'
+gem 'jwt', '>= 2.2.3'
 gem 'pg', '>= 1.1'
 gem 'puma', '~> 5.0'
+gem 'redis', '~> 4.4.0'
+gem 'redis-namespace', '~> 1.8.1'
+gem 'redis-rails', '~> 5.0.2'
 
 group :development, :test do
   gem 'byebug', '>= 11.1.3', platforms: %i[mri mingw x64_mingw]
@@ -39,6 +45,7 @@ end
 group :test do
   gem 'database_cleaner-active_record', '~> 2.0.1'
   gem 'faker', '>= 2.19.0'
+  gem 'json_matchers', '>= 0.11'
   gem 'prosopite', '>= 1.0.1'
   gem 'rspec-rails', '~> 5.0.0'
   gem 'shoulda-matchers', '~> 5.0'

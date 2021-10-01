@@ -20,6 +20,8 @@
 #  fk_rails_...  (user_id => users.id)
 #
 class ToDoList < ApplicationRecord
+  TITLE_MAX_LENGTH = 255
+
   belongs_to :user
   has_many :tasks, dependent: :destroy
 end

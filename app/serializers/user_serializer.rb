@@ -16,21 +16,9 @@
 #
 #  index_users_on_email  (email) UNIQUE
 #
-FactoryBot.define do
-  factory :user do
-    name { Faker::Name.first_name }
-    surname { Faker::Name.last_name }
-    email { Faker::Internet.email }
-    password_digest { Faker::Internet.password }
+class UserSerializer
+  include JSONAPI::Serializer
 
-    factory :user_with_to_do_lists do
-      transient do
-        to_do_lists_count { 3 }
-      end
-
-      to_do_lists do
-        Array.new(to_do_lists_count) { association(:to_do_list) }
-      end
-    end
-  end
+  attributes :name, :surname, :email, :created_at, :updated_at
+  # has_many :to_do_lists
 end

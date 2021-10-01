@@ -1,14 +1,12 @@
 # frozen_string_literal: true
 
-RSpec.describe HealthCheckController, :controller do
+RSpec.describe HealthCheckController, type: :request do
   it 'has correct parent' do
-    expect(controller).to be_a_kind_of(ApplicationController)
+    expect(subject).to be_a_kind_of(ApplicationController)
   end
 
-  describe 'GET #health' do
-    before do
-      get :health
-    end
+  describe '#health' do
+    before { get root_path }
 
     let(:expected_body) { { 'Hello' => 'world' } }
 

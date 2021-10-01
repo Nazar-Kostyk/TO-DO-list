@@ -1,0 +1,11 @@
+# frozen_string_literal: true
+
+module Schemas
+  module ToDoLists
+    UpdateToDoListSchema = Dry::Schema.Params do
+      required(:id).filled(:string)
+      optional(:title).maybe(:string)
+      optional(:description).maybe(:string)
+    end
+  end
+end
