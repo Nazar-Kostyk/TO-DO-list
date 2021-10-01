@@ -2,7 +2,7 @@
 
 module ToDoLists
   class UpdateParamsValidator < Common::BaseValidator
-    params(Common::Schemas::ToDoLists::UpdateToDoListSchema)
+    params(Schemas::ToDoLists::UpdateToDoListSchema)
 
     register_macro(:uuid_format) do
       key.failure(:invalid_format, field: :id, format_name: :UUID) unless UUID_FORMAT.match?(value)

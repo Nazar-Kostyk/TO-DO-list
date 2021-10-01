@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-module Common
-  module Schemas
+module Schemas
+  module Users
     CreateUserSchema = Dry::Schema.Params do
       required(:name).filled(:string)
       required(:surname).filled(:string)

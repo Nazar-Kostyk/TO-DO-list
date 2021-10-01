@@ -2,7 +2,7 @@
 
 module ToDoLists
   class CreateParamsValidator < Common::BaseValidator
-    params(Common::Schemas::ToDoLists::CreateToDoListSchema)
+    params(Schemas::ToDoLists::CreateToDoListSchema)
 
     register_macro(:max_length) do |macro:|
       max = macro.args[0]

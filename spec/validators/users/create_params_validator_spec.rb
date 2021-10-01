@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Users::Create::CreateParamsValidator do
+RSpec.describe Users::CreateParamsValidator do
   subject(:validator) { described_class.new.call(input) }
 
   context 'when valid params provided' do
@@ -21,12 +21,6 @@ RSpec.describe Users::Create::CreateParamsValidator do
   context 'when name is invalid' do
     context 'when name is missing' do
       let(:input) { {} }
-
-      it { is_expected.to be_a_failure }
-    end
-
-    context 'when name is not a string' do
-      let(:input) { { name: 1 } }
 
       it { is_expected.to be_a_failure }
     end
@@ -52,12 +46,6 @@ RSpec.describe Users::Create::CreateParamsValidator do
       it { is_expected.to be_a_failure }
     end
 
-    context 'when surname is not a string' do
-      let(:input) { { surname: 1 } }
-
-      it { is_expected.to be_a_failure }
-    end
-
     context 'when surname exceeds size limit' do
       let(:input) { { surname: Faker::Lorem.characters(number: User::SURNAME_MAX_LENGTH + 1) } }
       let(:expected_error_message) do
@@ -75,12 +63,6 @@ RSpec.describe Users::Create::CreateParamsValidator do
   context 'when email is invalid' do
     context 'when email is missing' do
       let(:input) { {} }
-
-      it { is_expected.to be_a_failure }
-    end
-
-    context 'when email is not a string' do
-      let(:input) { { email: 1 } }
 
       it { is_expected.to be_a_failure }
     end
@@ -113,7 +95,9 @@ RSpec.describe Users::Create::CreateParamsValidator do
 
     context 'when email is in the wrong format' do
       let(:input) { { email: Faker::Lorem.word } }
-      let(:expected_error_message) { I18n.t('dry_validation.errors.invalid', field: :email) }
+      let(:expected_error_message) do
+        I18n.t('dry_validation.errors.invalid_format', field: :email, format_name: :email)
+      end
 
       it { is_expected.to be_a_failure }
 
@@ -138,12 +122,6 @@ RSpec.describe Users::Create::CreateParamsValidator do
   context 'when password is invalid' do
     context 'when password is missing' do
       let(:input) { {} }
-
-      it { is_expected.to be_a_failure }
-    end
-
-    context 'when password is not a string' do
-      let(:input) { { password: 1 } }
 
       it { is_expected.to be_a_failure }
     end
@@ -178,12 +156,6 @@ RSpec.describe Users::Create::CreateParamsValidator do
   context 'when password_confirmation is invalid' do
     context 'when password_confirmation is missing' do
       let(:input) { {} }
-
-      it { is_expected.to be_a_failure }
-    end
-
-    context 'when password_confirmation is not a string' do
-      let(:input) { { password_confirmation: 1 } }
 
       it { is_expected.to be_a_failure }
     end

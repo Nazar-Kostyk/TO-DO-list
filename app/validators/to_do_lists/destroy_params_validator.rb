@@ -2,7 +2,7 @@
 
 module ToDoLists
   class DestroyParamsValidator < Common::BaseValidator
-    params(Common::Schemas::ToDoLists::DestroyToDoListSchema)
+    params(Common::Schemas::OnlyIdParamSchema)
 
     register_macro(:uuid_format) do
       key.failure(:invalid_format, field: :id, format_name: :UUID) unless UUID_FORMAT.match?(value)

@@ -8,7 +8,7 @@ class UsersController < ApplicationController
   end
 
   def create
-    validator = Users::Create::CreateParamsValidator.new.call(permitted_create_params)
+    validator = Users::CreateParamsValidator.new.call(permitted_create_params)
 
     if validator.success?
       @user = User.new(permitted_create_params.slice(:name, :surname, :email, :password))
@@ -23,7 +23,7 @@ class UsersController < ApplicationController
   end
 
   def update
-    validator = Users::Update::UpdateParamsValidator.new.call(permitted_update_params)
+    validator = Users::UpdateParamsValidator.new.call(permitted_update_params)
 
     if validator.success?
       return render_json_error(status: :unauthorized, error_key: 'wrong_password') unless correct_password_provdided?

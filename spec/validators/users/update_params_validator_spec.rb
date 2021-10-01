@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Users::Update::UpdateParamsValidator do
+RSpec.describe Users::UpdateParamsValidator do
   subject(:validator) { described_class.new.call(input) }
 
   context 'when valid params provided' do
@@ -26,12 +26,6 @@ RSpec.describe Users::Update::UpdateParamsValidator do
   end
 
   context 'when name is invalid' do
-    context 'when name is not a string' do
-      let(:input) { { name: 1 } }
-
-      it { is_expected.to be_a_failure }
-    end
-
     context 'when name exceeds size limit' do
       let(:input) { { name: Faker::Lorem.characters(number: User::NAME_MAX_LENGTH + 1) } }
       let(:expected_error_message) do
@@ -47,12 +41,6 @@ RSpec.describe Users::Update::UpdateParamsValidator do
   end
 
   context 'when surname is invalid' do
-    context 'when surname is not a string' do
-      let(:input) { { surname: 1 } }
-
-      it { is_expected.to be_a_failure }
-    end
-
     context 'when surname exceeds size limit' do
       let(:input) { { surname: Faker::Lorem.characters(number: User::SURNAME_MAX_LENGTH + 1) } }
       let(:expected_error_message) do
@@ -68,12 +56,6 @@ RSpec.describe Users::Update::UpdateParamsValidator do
   end
 
   context 'when email is invalid' do
-    context 'when email is not a string' do
-      let(:input) { { email: 1 } }
-
-      it { is_expected.to be_a_failure }
-    end
-
     context 'when email size is less than the minimum allowed' do
       let(:input) { { email: Faker::Lorem.characters(number: User::EMAIL_MIN_LENGTH - 1) } }
       let(:expected_error_message) do
@@ -102,7 +84,9 @@ RSpec.describe Users::Update::UpdateParamsValidator do
 
     context 'when email is in the wrong format' do
       let(:input) { { email: Faker::Lorem.word } }
-      let(:expected_error_message) { I18n.t('dry_validation.errors.invalid', field: :email) }
+      let(:expected_error_message) do
+        I18n.t('dry_validation.errors.invalid_format', field: :email, format_name: :email)
+      end
 
       it { is_expected.to be_a_failure }
 
@@ -130,21 +114,9 @@ RSpec.describe Users::Update::UpdateParamsValidator do
 
       it { is_expected.to be_a_failure }
     end
-
-    context 'when current_password is not a string' do
-      let(:input) { { current_password: 1 } }
-
-      it { is_expected.to be_a_failure }
-    end
   end
 
   context 'when new_password is invalid' do
-    context 'when new_password is not a string' do
-      let(:input) { { new_password: 1 } }
-
-      it { is_expected.to be_a_failure }
-    end
-
     context 'when new_password size is less than the minimum allowed' do
       let(:input) { { new_password: Faker::Lorem.characters(number: User::PASSWORD_MIN_LENGTH - 1) } }
       let(:expected_error_message) do
@@ -173,12 +145,6 @@ RSpec.describe Users::Update::UpdateParamsValidator do
   end
 
   context 'when new_password_confirmation is invalid' do
-    context 'when new_password_confirmation is not a string' do
-      let(:input) { { new_password_confirmation: 1 } }
-
-      it { is_expected.to be_a_failure }
-    end
-
     context 'when new_password_confirmation does not match the password' do
       let(:input) do
         {
