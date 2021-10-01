@@ -4,16 +4,16 @@ class UsersController < ApplicationController
   before_action :authorize_request, except: :create
 
   def show
-    render_json_response(user: @current_user, status: :ok)
+    render_json_response(data: @current_user, serializer: UserSerializer)
   end
 
   def create
-    validator = Users::Create::CreateParamsValidator.new.call(permitted_create_params)
+    validator = Users::CreateParamsValidator.new.call(permitted_create_params)
 
     if validator.success?
       @user = User.new(permitted_create_params.slice(:name, :surname, :email, :password))
       if @user.save
-        render_json_response(user: @user, status: :created)
+        render_json_response(data: @user, serializer: UserSerializer, status: :created)
       else
         render_json_error(status: :unprocessable_entity, error_key: 'database_error')
       end
@@ -23,13 +23,13 @@ class UsersController < ApplicationController
   end
 
   def update
-    validator = Users::Update::UpdateParamsValidator.new.call(permitted_update_params)
+    validator = Users::UpdateParamsValidator.new.call(permitted_update_params)
 
     if validator.success?
       return render_json_error(status: :unauthorized, error_key: 'wrong_password') unless correct_password_provdided?
 
       if @current_user.update(map_request_params_to_model_params)
-        render_json_response(user: @current_user, status: :ok)
+        render_json_response(data: @current_user, serializer: UserSerializer)
       else
         render_json_error(status: :unprocessable_entity, error_key: 'database_error')
       end
@@ -58,9 +58,5 @@ class UsersController < ApplicationController
     request_params.slice(:name, :surname, :email)
                   .merge({ password: request_params[:new_password] })
                   .compact
-  end
-
-  def render_json_response(user:, status: :ok)
-    render json: UserSerializer.new(user).serializable_hash, status: status
   end
 end

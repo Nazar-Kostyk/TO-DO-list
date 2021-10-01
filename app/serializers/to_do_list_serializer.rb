@@ -19,10 +19,9 @@
 #
 #  fk_rails_...  (user_id => users.id)
 #
-FactoryBot.define do
-  factory :to_do_list do
-    user
-    title { Faker::Lorem.sentence }
-    description { Faker::Lorem.paragraph }
-  end
+class ToDoListSerializer
+  include JSONAPI::Serializer
+
+  attributes :title, :description, :created_at, :updated_at
+  # has_many :tasks
 end

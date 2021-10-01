@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-module Common
-  module Schemas
+module Schemas
+  module Users
     UpdateUserSchema = Dry::Schema.Params do
       optional(:name).filled(:string)
       optional(:surname).filled(:string)

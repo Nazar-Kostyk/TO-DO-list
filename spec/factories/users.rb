@@ -21,6 +21,16 @@ FactoryBot.define do
     name { Faker::Name.first_name }
     surname { Faker::Name.last_name }
     email { Faker::Internet.email }
-    password_digest { SecureRandom.uuid }
+    password_digest { Faker::Internet.password }
+
+    factory :user_with_to_do_lists do
+      transient do
+        to_do_lists_count { 3 }
+      end
+
+      to_do_lists do
+        Array.new(to_do_lists_count) { association(:to_do_list) }
+      end
+    end
   end
 end

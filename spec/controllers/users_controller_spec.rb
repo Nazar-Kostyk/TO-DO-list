@@ -11,8 +11,9 @@ RSpec.describe UsersController, type: :request do
       get user_path, headers: headers
     end
 
+    let!(:user) { create(:user) }
+
     context 'when Authorization header is valid' do
-      let!(:user) { create(:user) }
       let(:authorization_header) { JsonWebToken.encode(user_id: user.id) }
 
       it 'returns correct response' do
@@ -24,25 +25,13 @@ RSpec.describe UsersController, type: :request do
     end
 
     context 'when Authorization header is invalid' do
-      let(:authorization_header) { Faker::Lorem.characters(number: 128) }
-      let(:expected_body) do
-        {
-          'errors' => [
-            {
-              'code' => 401,
-              'title' => I18n.t('error_messages.unauthorized_request.title'),
-              'detail' => I18n.t('error_messages.unauthorized_request.detail')
-            }
-          ]
-        }
-      end
-
-      it 'returns the unauthorized request' do
+      before do
         endpoint_call
-
-        expect(response).to be_unauthorized
-        expect(JSON.parse(response.body)).to eq(expected_body)
       end
+
+      let(:authorization_header) { 'invalid' }
+
+      it_behaves_like 'unauthorized request'
     end
   end
 
@@ -63,6 +52,10 @@ RSpec.describe UsersController, type: :request do
         }
       end
 
+      it 'creates user' do
+        expect { endpoint_call }.to change(User, :count).by(1)
+      end
+
       it 'returns correct response' do
         endpoint_call
 
@@ -70,33 +63,13 @@ RSpec.describe UsersController, type: :request do
         expect(JSON.parse(response.body)).to match_json_schema('users/single')
       end
 
-      it 'creates user' do
-        expect { endpoint_call }.to change(User, :count).by(1)
-      end
-
       context 'when database error occured' do
         before do
           allow_any_instance_of(User).to receive(:save).and_return(nil)
-        end
-
-        let(:expected_body) do
-          {
-            'errors' => [
-              {
-                'code' => 422,
-                'title' => I18n.t('error_messages.database_error.title'),
-                'detail' => I18n.t('error_messages.database_error.detail')
-              }
-            ]
-          }
-        end
-
-        it 'returns the bad request' do
           endpoint_call
-
-          expect(response).to have_http_status(:unprocessable_entity)
-          expect(JSON.parse(response.body)).to eq(expected_body)
         end
+
+        it_behaves_like 'database error'
       end
     end
 
@@ -133,9 +106,10 @@ RSpec.describe UsersController, type: :request do
       put user_path, params: params, headers: headers
     end
 
+    let(:password) { Faker::Lorem.characters(number: User::PASSWORD_MIN_LENGTH) }
+    let!(:user) { create(:user, password: password) }
+
     context 'when Authorization header is valid' do
-      let(:password) { Faker::Lorem.characters(number: User::PASSWORD_MIN_LENGTH) }
-      let!(:user) { create(:user, password: password) }
       let(:authorization_header) { JsonWebToken.encode(user_id: user.id) }
 
       context 'when valid params provided' do
@@ -160,30 +134,11 @@ RSpec.describe UsersController, type: :request do
 
         context 'when database error occured' do
           before do
-            allow_any_instance_of(User).to receive(:update).with(expected_params).and_return(nil)
-          end
-
-          let(:expected_params) do
-            params.slice(:name, :surname, :email).merge({ password: params[:new_password] }).with_indifferent_access
-          end
-          let(:expected_body) do
-            {
-              'errors' => [
-                {
-                  'code' => 422,
-                  'title' => I18n.t('error_messages.database_error.title'),
-                  'detail' => I18n.t('error_messages.database_error.detail')
-                }
-              ]
-            }
-          end
-
-          it 'returns the bad request' do
+            allow_any_instance_of(User).to receive(:update).and_return(nil)
             endpoint_call
-
-            expect(response).to have_http_status(:unprocessable_entity)
-            expect(JSON.parse(response.body)).to eq(expected_body)
           end
+
+          it_behaves_like 'database error'
         end
       end
 
@@ -236,26 +191,14 @@ RSpec.describe UsersController, type: :request do
     end
 
     context 'when Authorization header is invalid' do
-      let(:authorization_header) { Faker::Lorem.characters(number: 128) }
-      let(:params) { {} }
-      let(:expected_body) do
-        {
-          'errors' => [
-            {
-              'code' => 401,
-              'title' => I18n.t('error_messages.unauthorized_request.title'),
-              'detail' => I18n.t('error_messages.unauthorized_request.detail')
-            }
-          ]
-        }
-      end
-
-      it 'returns the unauthorized request' do
+      before do
         endpoint_call
-
-        expect(response).to be_unauthorized
-        expect(JSON.parse(response.body)).to eq(expected_body)
       end
+
+      let(:authorization_header) { 'invalid' }
+      let(:params) { {} }
+
+      it_behaves_like 'unauthorized request'
     end
   end
 end

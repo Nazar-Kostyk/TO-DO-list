@@ -23,7 +23,7 @@
 #
 FactoryBot.define do
   factory :task do
-    to_do_list_id { SecureRandom.uuid }
+    to_do_list
     title { Faker::Lorem.sentence }
     is_completed { Faker::Boolean.boolean }
     sequence(:position)

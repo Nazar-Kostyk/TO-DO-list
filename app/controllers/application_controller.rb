@@ -2,6 +2,8 @@
 
 # ApplicationController: base controller
 class ApplicationController < ActionController::API
+  rescue_from ActiveRecord::RecordNotFound, with: :not_found
+
   def authorize_request
     header = request.headers['Authorization']
     header = header.split.last if header
@@ -9,15 +11,21 @@ class ApplicationController < ActionController::API
     begin
       decoded = JsonWebToken.decode(header)
       @current_user = User.find(decoded[:user_id])
-    rescue ActiveRecord::RecordNotFound
-      render_json_error(status: :not_found, error_key: 'user_not_found')
     rescue JWT::DecodeError
       render_json_error(status: :unauthorized, error_key: 'unauthorized_request')
     end
   end
 
+  def render_json_response(data:, serializer:, options: {}, status: :ok)
+    render json: serializer.new(data, options).serializable_hash, status: status
+  end
+
+  def not_found(exception)
+    render_json_error(status: :not_found, error_key: "#{exception.model.underscore}_not_found")
+  end
+
   def render_json_error(status:, error_key:)
-    code = Rack::Utils::SYMBOL_TO_STATUS_CODE[status] if status.is_a? Symbol
+    code = status.is_a?(Symbol) ? Rack::Utils::SYMBOL_TO_STATUS_CODE[status] : 500
 
     error = {
       code: code,
