@@ -25,7 +25,7 @@ class ApplicationController < ActionController::API
   end
 
   def render_json_error(status:, error_key:)
-    code = Rack::Utils::SYMBOL_TO_STATUS_CODE[status] if status.is_a? Symbol
+    code = status.is_a?(Symbol) ? Rack::Utils::SYMBOL_TO_STATUS_CODE[status] : 500
 
     error = {
       code: code,

@@ -5,10 +5,8 @@ RSpec.describe HealthCheckController, type: :request do
     expect(subject).to be_a_kind_of(ApplicationController)
   end
 
-  describe 'GET #health' do
-    before do
-      get root_path
-    end
+  describe '#health' do
+    before { get root_path }
 
     let(:expected_body) { { 'Hello' => 'world' } }
 
