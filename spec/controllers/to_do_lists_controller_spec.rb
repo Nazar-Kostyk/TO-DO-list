@@ -57,25 +57,13 @@ RSpec.describe ToDoListsController, type: :request do
         end
 
         context 'when to-do list not found' do
-          let(:to_do_list_id) { SecureRandom.uuid }
-          let(:expected_body) do
-            {
-              'errors' => [
-                {
-                  'code' => 404,
-                  'title' => I18n.t('error_messages.to_do_list_not_found.title'),
-                  'detail' => I18n.t('error_messages.to_do_list_not_found.detail')
-                }
-              ]
-            }
-          end
-
-          it 'returns not_found' do
+          before do
             endpoint_call
-
-            expect(response).to be_not_found
-            expect(JSON.parse(response.body)).to eq(expected_body)
           end
+
+          let(:to_do_list_id) { SecureRandom.uuid }
+
+          it_behaves_like 'entity not found', ToDoList
         end
       end
 
@@ -143,26 +131,10 @@ RSpec.describe ToDoListsController, type: :request do
         context 'when database error occured' do
           before do
             allow_any_instance_of(ToDoList).to receive(:save).and_return(nil)
-          end
-
-          let(:expected_body) do
-            {
-              'errors' => [
-                {
-                  'code' => 422,
-                  'title' => I18n.t('error_messages.database_error.title'),
-                  'detail' => I18n.t('error_messages.database_error.detail')
-                }
-              ]
-            }
-          end
-
-          it 'returns the bad request' do
             endpoint_call
-
-            expect(response).to have_http_status(:unprocessable_entity)
-            expect(JSON.parse(response.body)).to eq(expected_body)
           end
+
+          it_behaves_like 'database error'
         end
       end
 
@@ -234,29 +206,23 @@ RSpec.describe ToDoListsController, type: :request do
           expect(JSON.parse(response.body)).to match_json_schema('to_do_lists/single')
         end
 
+        context 'when to-do list not found' do
+          before do
+            endpoint_call
+          end
+
+          let(:to_do_list_id) { SecureRandom.uuid }
+
+          it_behaves_like 'entity not found', ToDoList
+        end
+
         context 'when database error occured' do
           before do
             allow_any_instance_of(ToDoList).to receive(:update).and_return(nil)
-          end
-
-          let(:expected_body) do
-            {
-              'errors' => [
-                {
-                  'code' => 422,
-                  'title' => I18n.t('error_messages.database_error.title'),
-                  'detail' => I18n.t('error_messages.database_error.detail')
-                }
-              ]
-            }
-          end
-
-          it 'returns the bad request' do
             endpoint_call
-
-            expect(response).to have_http_status(:unprocessable_entity)
-            expect(JSON.parse(response.body)).to eq(expected_body)
           end
+
+          it_behaves_like 'database error'
         end
       end
 
@@ -338,50 +304,22 @@ RSpec.describe ToDoListsController, type: :request do
         end
 
         context 'when to-do list not found' do
-          let(:to_do_list_id) { SecureRandom.uuid }
-          let(:expected_body) do
-            {
-              'errors' => [
-                {
-                  'code' => 404,
-                  'title' => I18n.t('error_messages.to_do_list_not_found.title'),
-                  'detail' => I18n.t('error_messages.to_do_list_not_found.detail')
-                }
-              ]
-            }
-          end
-
-          it 'returns not_found' do
+          before do
             endpoint_call
-
-            expect(response).to be_not_found
-            expect(JSON.parse(response.body)).to eq(expected_body)
           end
+
+          let(:to_do_list_id) { SecureRandom.uuid }
+
+          it_behaves_like 'entity not found', ToDoList
         end
 
         context 'when database error occured' do
           before do
             allow_any_instance_of(ToDoList).to receive(:destroy).and_return(nil)
-          end
-
-          let(:expected_body) do
-            {
-              'errors' => [
-                {
-                  'code' => 422,
-                  'title' => I18n.t('error_messages.database_error.title'),
-                  'detail' => I18n.t('error_messages.database_error.detail')
-                }
-              ]
-            }
-          end
-
-          it 'returns the bad request' do
             endpoint_call
-
-            expect(response).to have_http_status(:unprocessable_entity)
-            expect(JSON.parse(response.body)).to eq(expected_body)
           end
+
+          it_behaves_like 'database error'
         end
       end
 
