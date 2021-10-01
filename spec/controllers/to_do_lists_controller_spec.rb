@@ -11,8 +11,9 @@ RSpec.describe ToDoListsController, type: :request do
       get to_do_lists_path, headers: headers
     end
 
+    let!(:user) { create(:user_with_to_do_lists) }
+
     context 'when Authorization header is valid' do
-      let!(:user) { create(:user_with_to_do_lists) }
       let(:authorization_header) { JsonWebToken.encode(user_id: user.id) }
 
       it 'returns correct response' do
@@ -24,25 +25,13 @@ RSpec.describe ToDoListsController, type: :request do
     end
 
     context 'when Authorization header is invalid' do
-      let(:authorization_header) { Faker::Lorem.characters(number: 128) }
-      let(:expected_body) do
-        {
-          'errors' => [
-            {
-              'code' => 401,
-              'title' => I18n.t('error_messages.unauthorized_request.title'),
-              'detail' => I18n.t('error_messages.unauthorized_request.detail')
-            }
-          ]
-        }
-      end
-
-      it 'returns the unauthorized request' do
+      before do
         endpoint_call
-
-        expect(response).to be_unauthorized
-        expect(JSON.parse(response.body)).to eq(expected_body)
       end
+
+      let(:authorization_header) { 'invalid' }
+
+      it_behaves_like 'unauthorized request'
     end
   end
 
@@ -52,13 +41,13 @@ RSpec.describe ToDoListsController, type: :request do
       get to_do_list_path(to_do_list_id), headers: headers
     end
 
+    let!(:user) { create(:user_with_to_do_lists) }
+    let(:to_do_list_id) { user.to_do_lists.sample.id }
+
     context 'when Authorization header is valid' do
-      let!(:user) { create(:user_with_to_do_lists) }
       let(:authorization_header) { JsonWebToken.encode(user_id: user.id) }
 
-      context 'when id is valid' do
-        let(:to_do_list_id) { user.to_do_lists.sample.id }
-
+      context 'when params are valid' do
         it 'returns correct response' do
           endpoint_call
 
@@ -90,7 +79,7 @@ RSpec.describe ToDoListsController, type: :request do
         end
       end
 
-      context 'when id is invalid' do
+      context 'when params are invalid' do
         let(:to_do_list_id) { 'invalid' }
         let(:expected_body) do
           {
@@ -115,27 +104,13 @@ RSpec.describe ToDoListsController, type: :request do
     end
 
     context 'when Authorization header is invalid' do
-      let!(:user) { create(:user_with_to_do_lists) }
-      let(:to_do_list_id) { user.to_do_lists.sample.id }
-      let(:authorization_header) { Faker::Lorem.characters(number: 128) }
-      let(:expected_body) do
-        {
-          'errors' => [
-            {
-              'code' => 401,
-              'title' => I18n.t('error_messages.unauthorized_request.title'),
-              'detail' => I18n.t('error_messages.unauthorized_request.detail')
-            }
-          ]
-        }
-      end
-
-      it 'returns the unauthorized request' do
+      before do
         endpoint_call
-
-        expect(response).to be_unauthorized
-        expect(JSON.parse(response.body)).to eq(expected_body)
       end
+
+      let(:authorization_header) { 'invalid' }
+
+      it_behaves_like 'unauthorized request'
     end
   end
 
@@ -145,8 +120,9 @@ RSpec.describe ToDoListsController, type: :request do
       post to_do_lists_path, params: params, headers: headers
     end
 
+    let!(:user) { create(:user) }
+
     context 'when Authorization header is valid' do
-      let!(:user) { create(:user) }
       let(:authorization_header) { JsonWebToken.encode(user_id: user.id) }
 
       context 'when params are valid' do
@@ -225,26 +201,14 @@ RSpec.describe ToDoListsController, type: :request do
     end
 
     context 'when Authorization header is invalid' do
-      let(:authorization_header) { Faker::Lorem.characters(number: 128) }
-      let(:params) { {} }
-      let(:expected_body) do
-        {
-          'errors' => [
-            {
-              'code' => 401,
-              'title' => I18n.t('error_messages.unauthorized_request.title'),
-              'detail' => I18n.t('error_messages.unauthorized_request.detail')
-            }
-          ]
-        }
-      end
-
-      it 'returns the unauthorized request' do
+      before do
         endpoint_call
-
-        expect(response).to be_unauthorized
-        expect(JSON.parse(response.body)).to eq(expected_body)
       end
+
+      let(:authorization_header) { 'invalid' }
+      let(:params) { {} }
+
+      it_behaves_like 'unauthorized request'
     end
   end
 
@@ -254,12 +218,13 @@ RSpec.describe ToDoListsController, type: :request do
       put to_do_list_path(to_do_list_id), params: params, headers: headers
     end
 
+    let!(:user) { create(:user_with_to_do_lists) }
+    let(:to_do_list_id) { user.to_do_lists.sample.id }
+
     context 'when Authorization header is valid' do
-      let!(:user) { create(:user_with_to_do_lists) }
       let(:authorization_header) { JsonWebToken.encode(user_id: user.id) }
 
       context 'when params are valid' do
-        let(:to_do_list_id) { user.to_do_lists.sample.id }
         let(:params) { { title: Faker::Lorem.sentence, description: Faker::Lorem.paragraph } }
 
         it 'returns correct response' do
@@ -337,28 +302,14 @@ RSpec.describe ToDoListsController, type: :request do
     end
 
     context 'when Authorization header is invalid' do
-      let!(:user) { create(:user_with_to_do_lists) }
-      let(:to_do_list_id) { user.to_do_lists.sample.id }
-      let(:params) { {} }
-      let(:authorization_header) { Faker::Lorem.characters(number: 128) }
-      let(:expected_body) do
-        {
-          'errors' => [
-            {
-              'code' => 401,
-              'title' => I18n.t('error_messages.unauthorized_request.title'),
-              'detail' => I18n.t('error_messages.unauthorized_request.detail')
-            }
-          ]
-        }
-      end
-
-      it 'returns the unauthorized request' do
+      before do
         endpoint_call
-
-        expect(response).to be_unauthorized
-        expect(JSON.parse(response.body)).to eq(expected_body)
       end
+
+      let(:authorization_header) { 'invalid' }
+      let(:params) { {} }
+
+      it_behaves_like 'unauthorized request'
     end
   end
 
@@ -368,13 +319,13 @@ RSpec.describe ToDoListsController, type: :request do
       delete to_do_list_path(to_do_list_id), headers: headers
     end
 
+    let!(:user) { create(:user_with_to_do_lists) }
+    let(:to_do_list_id) { user.to_do_lists.sample.id }
+
     context 'when Authorization header is valid' do
-      let!(:user) { create(:user_with_to_do_lists) }
       let(:authorization_header) { JsonWebToken.encode(user_id: user.id) }
 
-      context 'when id is valid' do
-        let(:to_do_list_id) { user.to_do_lists.sample.id }
-
+      context 'when params are valid' do
         it 'deletes to-do list' do
           expect { endpoint_call }.to change(ToDoList, :count).by(-1)
         end
@@ -434,7 +385,7 @@ RSpec.describe ToDoListsController, type: :request do
         end
       end
 
-      context 'when id is invalid' do
+      context 'when params are invalid' do
         let(:to_do_list_id) { 'invalid' }
         let(:expected_body) do
           {
@@ -459,27 +410,13 @@ RSpec.describe ToDoListsController, type: :request do
     end
 
     context 'when Authorization header is invalid' do
-      let!(:user) { create(:user_with_to_do_lists) }
-      let(:to_do_list_id) { user.to_do_lists.sample.id }
-      let(:authorization_header) { Faker::Lorem.characters(number: 128) }
-      let(:expected_body) do
-        {
-          'errors' => [
-            {
-              'code' => 401,
-              'title' => I18n.t('error_messages.unauthorized_request.title'),
-              'detail' => I18n.t('error_messages.unauthorized_request.detail')
-            }
-          ]
-        }
-      end
-
-      it 'returns the unauthorized request' do
+      before do
         endpoint_call
-
-        expect(response).to be_unauthorized
-        expect(JSON.parse(response.body)).to eq(expected_body)
       end
+
+      let(:authorization_header) { 'invalid' }
+
+      it_behaves_like 'unauthorized request'
     end
   end
 end
