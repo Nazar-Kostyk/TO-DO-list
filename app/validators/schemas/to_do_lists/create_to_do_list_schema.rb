@@ -3,7 +3,7 @@
 module Schemas
   module ToDoLists
     CreateToDoListSchema = Dry::Schema.Params do
-      optional(:title).maybe(:string)
+      required(:title).maybe(:string)
       optional(:description).maybe(:string)
     end
   end

@@ -83,6 +83,6 @@ class ToDoListsController < ApplicationController
   end
 
   def model_params
-    permitted_create_params.merge({ user_id: @current_user.id })
+    permitted_create_params.merge({ user_id: @current_user.id }).compact_blank
   end
 end

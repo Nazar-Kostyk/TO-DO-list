@@ -39,7 +39,7 @@ ActiveRecord::Schema.define(version: 20_210_829_170_720) do
   end
 
   create_table 'to_do_lists', id: :uuid, default: -> { 'gen_random_uuid()' }, force: :cascade do |t|
-    t.string 'title', limit: 255, default: 'Untitled'
+    t.string 'title', limit: 180, default: 'New Title'
     t.text 'description'
     t.uuid 'user_id', null: false
     t.datetime 'created_at', precision: 6, null: false
