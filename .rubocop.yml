@@ -1,0 +1,36 @@
+require:
+  - rubocop-performance
+  - rubocop-rails
+  - rubocop-rake
+  - rubocop-rspec
+
+AllCops:
+  NewCops: enable
+  Exclude:
+    - 'bin/{bundle,rackup,rake,rspec,rubocop}'
+    - 'builds/**/*'
+    - 'vendor/**/*'
+
+Metrics/BlockLength:
+  Enabled: false
+Metrics/MethodLength:
+  Enabled: false
+
+Style/Documentation:
+  Enabled: false
+Style/DocumentationMethod:
+  Enabled: false
+
+Rails/FilePath:
+  EnforcedStyle: arguments
+
+RSpec/MultipleExpectations:
+  Enabled: false
+RSpec/NamedSubject:
+  Enabled: false
+RSpec/NestedGroups:
+  Enabled: false
+RSpec/MultipleMemoizedHelpers:
+  Enabled: false
+RSpec/AnyInstance:
+  Enabled: false

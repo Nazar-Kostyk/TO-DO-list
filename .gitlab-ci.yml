@@ -1,0 +1,71 @@
+stages:
+  - build
+  - database_build
+  - running_linters
+  - running_rspec
+
+.build:
+  image: ruby:3.0.2
+  cache:
+    key: gems_and_packages
+    paths:
+      - vendor/ruby
+  before_script:
+    - gem install bundler --no-document
+    - bundle config set --local path 'vendor'
+    - bundle install --jobs $(nproc) "${FLAGS[@]}"
+
+.database_build:
+  extends: .build
+  services:
+    - postgres:12.8
+  variables:
+    POSTGRES_DB: $POSTGRES_DB
+    POSTGRES_USER: $POSTGRES_USER
+    POSTGRES_PASSWORD: $POSTGRES_PASSWORD
+  before_script:
+    - gem install bundler --no-document
+    - bundle config set --local path 'vendor'
+    - bundle install --jobs $(nproc) "${FLAGS[@]}"
+    - cp config/database.gitlab.yml config/database.yml
+    - RAILS_ENV=test bundle exec rake db:prepare
+
+rubocop:
+  extends: .build
+  stage: running_linters
+  script:
+    - bundle exec rubocop --parallel -c .rubocop.yml
+
+best_practices:
+  extends: .build
+  stage: running_linters
+  script:
+    - bundle exec rails_best_practices
+
+gems-audit:
+  extends: .build
+  stage: running_linters
+  script:
+    - bundle exec bundler-audit
+
+dependencies-check:
+  extends: .build
+  stage: running_linters
+  script:
+    - bundle exec bundler-leak
+
+brakeman:
+  extends: .build
+  stage: running_linters
+  script:
+    - bundle exec brakeman --rails6 -A
+
+rspec:
+  extends: .database_build
+  stage: running_rspec
+  artifacts:
+    name: coverage
+    paths:
+      - coverage/
+  script:
+    - bundle exec rspec --profile 10 --format progress
