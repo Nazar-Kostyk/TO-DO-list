@@ -2,7 +2,7 @@
 
 module Schemas
   module Tasks
-    ShowTaskSchema = Dry::Schema.Params do
+    SingleTaskSchema = Dry::Schema.Params do
       required(:to_do_list_id).filled(:string)
       required(:id).filled(:string)
     end

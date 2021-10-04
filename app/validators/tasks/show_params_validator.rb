@@ -2,7 +2,7 @@
 
 module Tasks
   class ShowParamsValidator < Common::BaseValidator
-    params(Schemas::Tasks::ShowTaskSchema)
+    params(Schemas::Tasks::SingleTaskSchema)
 
     register_macro(:uuid_format) do
       key.failure(:invalid_format, field: :id, format_name: :UUID) unless UUID_FORMAT.match?(value)

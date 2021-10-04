@@ -27,11 +27,8 @@ class Task < ApplicationRecord
   belongs_to :to_do_list
 
   def destroy_record!
-    to_do_list_id = self.to_do_list.id
-    position = self.position
-
     Task.transaction do
-      self.destroy!
+      destroy!
       Task.where('to_do_list_id = ? AND position > ?', to_do_list_id, position).update_all('position = position - 1')
     end
   end
