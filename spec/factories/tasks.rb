@@ -14,8 +14,8 @@
 #
 # Indexes
 #
-#  index_tasks_on_position       (position) UNIQUE
-#  index_tasks_on_to_do_list_id  (to_do_list_id)
+#  index_tasks_on_to_do_list_id               (to_do_list_id)
+#  index_tasks_on_to_do_list_id_and_position  (to_do_list_id,position) UNIQUE
 #
 # Foreign Keys
 #
