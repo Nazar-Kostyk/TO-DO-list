@@ -3,6 +3,17 @@
 class TasksController < ApplicationController
   before_action :authorize_request
 
+  def index
+    validator = Tasks::IndexParamsValidator.new.call(permitted_index_params)
+
+    if validator.success?
+      @to_do_list = @current_user.to_do_lists.find(permitted_index_params[:to_do_list_id])
+      render_json_response(data: @to_do_list.tasks, serializer: TaskSerializer, options: { is_collection: true })
+    else
+      render_json_validation_error(validator.errors.to_h)
+    end
+  end
+
   def show
     validator = Tasks::ShowParamsValidator.new.call(permitted_show_params)
 
@@ -57,13 +68,19 @@ class TasksController < ApplicationController
       @to_do_list = @current_user.to_do_lists.find(permitted_update_params[:to_do_list_id])
       @task = @to_do_list.tasks.find(permitted_update_params[:id])
 
-      # update position attribute in all remainin tasks and destroy the selected one
+      @task.destroy_record!
+
+      head :no_content
     else
       render_json_validation_error(validator.errors.to_h)
     end
   end
 
   private
+
+  def permitted_index_params
+    params.permit(:to_do_list_id).to_h
+  end
 
   def permitted_show_params
     params.permit(:to_do_list_id, :id).to_h

@@ -5,7 +5,7 @@ Rails.application.routes.draw do
 
   resource :user, only: %i[show create update]
   resources :to_do_lists do
-    resources :tasks, only: %i[show create update destroy]
+    resources :tasks
   end
 
   post 'auth/login', to: 'authentication#login'
