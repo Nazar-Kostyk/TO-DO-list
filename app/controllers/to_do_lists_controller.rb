@@ -4,7 +4,7 @@ class ToDoListsController < ApplicationController
   before_action :authorize_request
 
   def index
-    render_json_response(data: @current_user.to_do_lists,
+    render_json_response(data: @current_user.to_do_lists.includes(:tasks),
                          serializer: ToDoListSerializer,
                          options: { is_collection: true })
   end
@@ -65,6 +65,8 @@ class ToDoListsController < ApplicationController
       render_json_validation_error(validator.errors.to_h)
     end
   end
+
+  private
 
   def permitted_show_params
     params.permit(:id).to_h

@@ -21,8 +21,9 @@
 #
 #  fk_rails_...  (to_do_list_id => to_do_lists.id)
 #
-class Task < ApplicationRecord
-  TITLE_MAX_LENGTH = 255
+class TaskSerializer
+  include JSONAPI::Serializer
 
+  attributes :title, :position, :is_completed, :created_at, :updated_at
   belongs_to :to_do_list
 end

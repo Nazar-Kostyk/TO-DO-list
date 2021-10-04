@@ -22,6 +22,7 @@ gem 'redis-rails', '~> 5.0.2'
 group :development, :test do
   gem 'byebug', '>= 11.1.3', platforms: %i[mri mingw x64_mingw]
   gem 'factory_bot_rails', '>= 6.2.0'
+  gem 'pg_query', '~> 2.1.0'
   gem 'pry-byebug', '~> 3.9.0'
   gem 'pry-rails', '~> 0.3.9'
 end

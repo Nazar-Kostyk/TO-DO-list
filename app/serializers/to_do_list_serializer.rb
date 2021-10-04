@@ -23,5 +23,6 @@ class ToDoListSerializer
   include JSONAPI::Serializer
 
   attributes :title, :description, :created_at, :updated_at
-  # has_many :tasks
+  belongs_to :user
+  has_many :tasks
 end

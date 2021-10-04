@@ -58,3 +58,6 @@ en:
     to_do_list_not_found:
       title: "Could not find to-do list"
       detail: "This to-do list does not exist, or has been deleted."
+    task_not_found:
+      title: "Could not find task"
+      detail: "This task does not exist, or has been deleted."
