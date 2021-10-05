@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class UsersController < ApplicationController
-  before_action :authorize_request, except: :create
+  before_action :authorize_access_request!, except: :create
 
   def show
     render_json_response(data: @current_user, serializer: UserSerializer)
@@ -49,7 +49,7 @@ class UsersController < ApplicationController
   end
 
   def correct_password_provdided?
-    @current_user.authenticate(permitted_update_params[:current_password])
+    current_user.authenticate(permitted_update_params[:current_password])
   end
 
   def map_request_params_to_model_params

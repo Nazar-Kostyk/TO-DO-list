@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class ToDoListsController < ApplicationController
-  before_action :authorize_request
+  before_action :authorize_access_request!
 
   def index
     render_json_response(data: @current_user.to_do_lists.includes(:tasks),

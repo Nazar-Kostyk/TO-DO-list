@@ -8,6 +8,6 @@ Rails.application.routes.draw do
     resources :tasks
   end
 
-  post 'sessions/create'
+  post 'sessions', to: 'sessions#create'
   post 'auth/login', to: 'authentication#login'
 end

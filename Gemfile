@@ -12,7 +12,7 @@ gem 'bcrypt', '>= 3.1.16'
 gem 'bootsnap', '>= 1.4.4', require: false
 gem 'dry-validation', '>= 1.6.0'
 gem 'jsonapi-serializer', '>= 2.2.0'
-gem 'jwt', '>= 2.2.3'
+gem 'jwt_sessions', '~> 2.6'
 gem 'pg', '>= 1.1'
 gem 'puma', '~> 5.0'
 gem 'redis', '~> 4.4.0'

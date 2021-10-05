@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class TasksController < ApplicationController
-  before_action :authorize_request
+  before_action :authorize_access_request!
 
   def index
     validator = Tasks::IndexParamsValidator.new.call(permitted_index_params)

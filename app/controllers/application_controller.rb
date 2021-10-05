@@ -2,18 +2,13 @@
 
 # ApplicationController: base controller
 class ApplicationController < ActionController::API
+  include JWTSessions::RailsAuthorization
+
+  rescue_from JWTSessions::Errors::Unauthorized, with: :not_authorized
   rescue_from ActiveRecord::RecordNotFound, with: :not_found
 
-  def authorize_request
-    header = request.headers['Authorization']
-    header = header.split.last if header
-
-    begin
-      decoded = JsonWebToken.decode(header)
-      @current_user = User.find(decoded[:user_id])
-    rescue JWT::DecodeError
-      render_json_error(status: :unauthorized, error_key: 'unauthorized_request')
-    end
+  def current_user
+    @current_user ||= User.find(payload['user_id'])
   end
 
   def render_json_response(data:, serializer:, options: {}, status: :ok)
@@ -22,6 +17,10 @@ class ApplicationController < ActionController::API
 
   def not_found(exception)
     render_json_error(status: :not_found, error_key: "#{exception.model.underscore}_not_found")
+  end
+
+  def not_authorized
+    render json: { error: 'Not authorized' }, status: :unauthorized
   end
 
   def render_json_error(status:, error_key:)
