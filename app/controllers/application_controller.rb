@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-# ApplicationController: base controller
 class ApplicationController < ActionController::API
   include JWTSessions::RailsAuthorization
 
@@ -20,7 +19,7 @@ class ApplicationController < ActionController::API
   end
 
   def not_authorized
-    render json: { error: 'Not authorized' }, status: :unauthorized
+    render_json_error(status: :unauthorized, error_key: 'unauthorized_request')
   end
 
   def render_json_error(status:, error_key:)
