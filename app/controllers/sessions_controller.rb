@@ -4,7 +4,11 @@ class SessionsController < ApplicationController
   def create
     result = AuthenticationService.new(permitted_create_params).call
 
-    render json: result.payload
+    if result.success?
+      render json: result.payload
+    else
+      render_json_error(status: result.error[:status], error_key: result.error[:error_key])
+    end
   end
 
   private

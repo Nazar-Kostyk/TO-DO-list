@@ -15,7 +15,7 @@ class AuthenticationService
 
       OpenStruct.new({ success?: true, payload: session.login })
     else
-      OpenStruct.new({ success?: false, error: { status: :unauthorized, translation_key: 'bad_credentials' } })
+      OpenStruct.new({ success?: false, error: { status: :unauthorized, error_key: 'bad_credentials' } })
     end
   end
 end
