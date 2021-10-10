@@ -68,7 +68,7 @@ class TasksController < ApplicationController
       @to_do_list = @current_user.to_do_lists.find(permitted_update_params[:to_do_list_id])
       @task = @to_do_list.tasks.find(permitted_update_params[:id])
 
-      @task.destroy_record!
+      @task.destroy_record
 
       head :no_content
     else

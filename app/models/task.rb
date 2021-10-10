@@ -26,8 +26,10 @@ class Task < ApplicationRecord
 
   belongs_to :to_do_list
 
-  def destroy_record!
+  def destroy_record
     Task.transaction do
+      ActiveRecord::Base.connection.execute('SET CONSTRAINTS index_tasks_on_to_do_list_id_and_position DEFERRED')
+
       destroy!
       Task.where('to_do_list_id = ? AND position > ?', to_do_list_id, position).update_all('position = position - 1')
     end
