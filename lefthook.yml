@@ -25,4 +25,4 @@ pre-push:
       run: bundle exec bundler-leak
     # brakeman:
     #   tags: backend security
-    #   run: bundle exec brakeman --rails6 -A
+    #   run: bundle exec brakeman --rails6 -A -k --no-skip-vendor
