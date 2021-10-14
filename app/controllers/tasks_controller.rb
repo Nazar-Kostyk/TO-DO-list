@@ -4,13 +4,12 @@ class TasksController < ApplicationController
   before_action :authorize_request
 
   def index
-    validator = Tasks::IndexParamsValidator.new.call(permitted_index_params)
+    response = Tasks::GetListOfTasks.new(@current_user, permitted_index_params).call
 
-    if validator.success?
-      @to_do_list = @current_user.to_do_lists.find(permitted_index_params[:to_do_list_id])
-      render_json_response(data: @to_do_list.tasks, serializer: TaskSerializer, options: { is_collection: true })
+    if response.success?
+      render_json_response(data: response.payload, serializer: TaskSerializer, options: { is_collection: true })
     else
-      render_json_validation_error(validator.errors.to_h)
+      render_json_validation_error(response.error)
     end
   end
 

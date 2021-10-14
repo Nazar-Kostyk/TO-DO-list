@@ -30,7 +30,7 @@ class Task < ApplicationRecord
     return self if position == new_position
 
     Task.transaction do
-      # Do not check position uniqueness constraint until the transaction commit
+      # Do not check the position uniqueness constraint until the transaction commit
       ActiveRecord::Base.connection.execute('SET CONSTRAINTS index_tasks_on_to_do_list_id_and_position DEFERRED')
 
       if position < new_position
@@ -47,7 +47,7 @@ class Task < ApplicationRecord
 
   def destroy_record
     Task.transaction do
-      # Do not check position uniqueness constraint until the transaction commit
+      # Do not check the position uniqueness constraint until the transaction commit
       ActiveRecord::Base.connection.execute('SET CONSTRAINTS index_tasks_on_to_do_list_id_and_position DEFERRED')
 
       destroy!
