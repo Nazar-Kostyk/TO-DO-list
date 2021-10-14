@@ -14,15 +14,12 @@ class TasksController < ApplicationController
   end
 
   def show
-    validator = Tasks::ShowParamsValidator.new.call(permitted_show_params)
+    response = Tasks::GetSingleTask.new(@current_user, permitted_show_params).call
 
-    if validator.success?
-      @to_do_list = @current_user.to_do_lists.find(permitted_show_params[:to_do_list_id])
-      @task = @to_do_list.tasks.find(permitted_show_params[:id])
-
-      render_json_response(data: @task, serializer: TaskSerializer)
+    if response.success?
+      render_json_response(data: response.payload, serializer: TaskSerializer)
     else
-      render_json_validation_error(validator.errors.to_h)
+      render_json_validation_error(response.error)
     end
   end
 
