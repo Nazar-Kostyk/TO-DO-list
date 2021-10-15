@@ -43,6 +43,8 @@ class Task < ApplicationRecord
 
       update!(position: new_position)
     end
+  rescue ActiveRecord::RecordInvalid
+    false
   end
 
   def destroy_record
@@ -53,5 +55,7 @@ class Task < ApplicationRecord
       destroy!
       Task.where('to_do_list_id = ? AND position > ?', to_do_list_id, position).update_all('position = position - 1')
     end
+  rescue ActiveRecord::RecordNotDestroyed
+    false
   end
 end

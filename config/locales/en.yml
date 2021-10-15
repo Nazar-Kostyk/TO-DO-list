@@ -61,3 +61,5 @@ en:
     task_not_found:
       title: "Could not find task"
       detail: "This task does not exist, or has been deleted."
+  notifications:
+    resource_destroyed: "The resource was successfully destroyed"
