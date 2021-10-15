@@ -19,10 +19,14 @@ stages:
   extends: .build
   services:
     - postgres:12.8
+    - redis:5.0.7
   variables:
     POSTGRES_DB: $POSTGRES_DB
     POSTGRES_USER: $POSTGRES_USER
     POSTGRES_PASSWORD: $POSTGRES_PASSWORD
+    REDIS_DB: $REDIS_DB
+    REDIS_URL: $REDIS_URL
+    REDIS_PORT: $REDIS_PORT
   before_script:
     - gem install bundler --no-document
     - bundle config set --local path 'vendor'
