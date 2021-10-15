@@ -4,7 +4,7 @@ class TasksController < ApplicationController
   before_action :authorize_access_request!
 
   def index
-    response = Actions::Tasks::GetListOfTasks.new(@current_user, permitted_index_params).call
+    response = Actions::Tasks::GetListOfTasks.new(current_user, permitted_index_params).call
 
     if response.success?
       render_json_response(data: response.payload, serializer: TaskSerializer, options: { is_collection: true })
@@ -14,7 +14,7 @@ class TasksController < ApplicationController
   end
 
   def show
-    response = Actions::Tasks::GetSingleTask.new(@current_user, permitted_show_params).call
+    response = Actions::Tasks::GetSingleTask.new(current_user, permitted_show_params).call
 
     if response.success?
       render_json_response(data: response.payload, serializer: TaskSerializer)
@@ -24,7 +24,7 @@ class TasksController < ApplicationController
   end
 
   def create
-    response = Actions::Tasks::CreateTask.new(@current_user, permitted_create_params).call
+    response = Actions::Tasks::CreateTask.new(current_user, permitted_create_params).call
 
     if response.success?
       render_json_response(data: response.payload, serializer: TaskSerializer)
@@ -34,7 +34,7 @@ class TasksController < ApplicationController
   end
 
   def update
-    response = Actions::Tasks::UpdateTask.new(@current_user, permitted_update_params).call
+    response = Actions::Tasks::UpdateTask.new(current_user, permitted_update_params).call
 
     if response.success?
       render_json_response(data: response.payload, serializer: TaskSerializer)
@@ -44,7 +44,7 @@ class TasksController < ApplicationController
   end
 
   def destroy
-    response = Actions::Tasks::DestroyTask.new(@current_user, permitted_destroy_params).call
+    response = Actions::Tasks::DestroyTask.new(current_user, permitted_destroy_params).call
 
     if response.success?
       head :no_content
@@ -54,7 +54,7 @@ class TasksController < ApplicationController
   end
 
   def change_position
-    response = Actions::Tasks::ChangePositionOfTask.new(@current_user, permitted_change_position_params).call
+    response = Actions::Tasks::ChangePositionOfTask.new(current_user, permitted_change_position_params).call
 
     if response.success?
       render_json_response(data: response.payload, serializer: TaskSerializer)
