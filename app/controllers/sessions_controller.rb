@@ -2,12 +2,12 @@
 
 class SessionsController < ApplicationController
   def create
-    result = AuthenticationService.new(permitted_create_params).call
+    response = AuthenticationService.new(permitted_create_params).call
 
-    if result.success?
-      render json: result.payload
+    if response.success?
+      render json: response.payload
     else
-      render_json_error(status: result.error[:status], error_key: result.error[:error_key])
+      render_json_error1(response.error)
     end
   end
 
