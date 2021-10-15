@@ -2,7 +2,7 @@
 
 module Actions
   module ToDoLists
-    class UpdateToDoList < BaseActionService
+    class UpdateToDoList < BaseService
       attr_reader :user, :params
 
       def initialize(user, params)
@@ -15,11 +15,7 @@ module Actions
 
         to_do_list = find_to_do_list
 
-        if to_do_list.update(params.slice(:title, :description))
-          build_success_response(to_do_list)
-        else
-          build_database_error
-        end
+        to_do_list.update(model_params) ? build_success_response(to_do_list) : build_database_error_response
       end
 
       private
@@ -29,11 +25,15 @@ module Actions
       end
 
       def validation_errors
-        build_validation_errors(validator.errors.to_h)
+        build_validation_errors_response(validator.errors.to_h)
       end
 
       def find_to_do_list
         user.to_do_lists.find(params[:id])
+      end
+
+      def model_params
+        params.slice(:title, :description)
       end
     end
   end

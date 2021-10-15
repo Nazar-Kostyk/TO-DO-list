@@ -2,7 +2,7 @@
 
 module Actions
   module Users
-    class CreateUser < BaseActionService
+    class CreateUser < BaseService
       attr_reader :params
 
       def initialize(params)
@@ -14,7 +14,7 @@ module Actions
 
         user = User.new(model_params)
 
-        user.save ? build_success_response(user) : build_database_error
+        user.save ? build_success_response(user) : build_database_error_response
       end
 
       private
@@ -24,7 +24,7 @@ module Actions
       end
 
       def validation_errors
-        build_validation_errors(validator.errors.to_h)
+        build_validation_errors_response(validator.errors.to_h)
       end
 
       def model_params

@@ -9,7 +9,7 @@ class TasksController < ApplicationController
     if response.success?
       render_json_response(data: response.payload, serializer: TaskSerializer, options: { is_collection: true })
     else
-      render_json_error1(response.error)
+      render_json_error(response.error)
     end
   end
 
@@ -19,7 +19,7 @@ class TasksController < ApplicationController
     if response.success?
       render_json_response(data: response.payload, serializer: TaskSerializer)
     else
-      render_json_error1(response.error)
+      render_json_error(response.error)
     end
   end
 
@@ -27,9 +27,9 @@ class TasksController < ApplicationController
     response = Actions::Tasks::CreateTask.new(current_user, permitted_create_params).call
 
     if response.success?
-      render_json_response(data: response.payload, serializer: TaskSerializer)
+      render_json_response(data: response.payload, serializer: TaskSerializer, status: :created)
     else
-      render_json_error1(response.error)
+      render_json_error(response.error)
     end
   end
 
@@ -39,7 +39,7 @@ class TasksController < ApplicationController
     if response.success?
       render_json_response(data: response.payload, serializer: TaskSerializer)
     else
-      render_json_error1(response.error)
+      render_json_error(response.error)
     end
   end
 
@@ -49,7 +49,7 @@ class TasksController < ApplicationController
     if response.success?
       head :no_content
     else
-      render_json_error1(response.error)
+      render_json_error(response.error)
     end
   end
 
@@ -59,7 +59,7 @@ class TasksController < ApplicationController
     if response.success?
       render_json_response(data: response.payload, serializer: TaskSerializer)
     else
-      render_json_error1(response.error)
+      render_json_error(response.error)
     end
   end
 

@@ -98,44 +98,4 @@ RSpec.describe ApplicationController, :controller do
 
     it_behaves_like 'entity not found', User
   end
-
-  describe '#render_json_error' do
-    controller do
-      def index
-        render_json_error(status: :not_found, error_key: 'user_not_found')
-      end
-    end
-
-    before { get :index }
-
-    it_behaves_like 'entity not found', User
-  end
-
-  describe '#render_json_validation_error' do
-    controller do
-      def index
-        render_json_validation_error({ id: ['Not found.'] })
-      end
-    end
-
-    before { get :index }
-
-    let(:expected_body) do
-      {
-        'errors' => [
-          {
-            'source' => {
-              'pointer' => '/data/attributes/id'
-            },
-            'detail' => 'Not found.'
-          }
-        ]
-      }
-    end
-
-    it 'returns the bad request' do
-      expect(response).to be_bad_request
-      expect(JSON.parse(response.body)).to eq(expected_body)
-    end
-  end
 end

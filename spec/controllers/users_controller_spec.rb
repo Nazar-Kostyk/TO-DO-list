@@ -172,7 +172,6 @@ RSpec.describe UsersController, type: :request do
             {
               'errors' => [
                 {
-                  'code' => 401,
                   'title' => I18n.t('error_messages.wrong_password.title'),
                   'detail' => I18n.t('error_messages.wrong_password.detail')
                 }

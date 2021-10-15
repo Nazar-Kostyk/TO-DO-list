@@ -2,7 +2,7 @@
 
 module Actions
   module ToDoLists
-    class GetListOfToDoLists < BaseActionService
+    class GetListOfToDoLists < BaseService
       attr_reader :user
 
       def initialize(user)
@@ -18,7 +18,7 @@ module Actions
       private
 
       def validation_errors
-        build_validation_errors(validator.errors.to_h)
+        build_validation_errors_response(validator.errors.to_h)
       end
 
       def retrieve_to_do_lists

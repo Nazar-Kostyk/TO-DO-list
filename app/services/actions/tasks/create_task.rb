@@ -2,7 +2,7 @@
 
 module Actions
   module Tasks
-    class CreateTask < BaseActionService
+    class CreateTask < BaseService
       attr_reader :user, :params
 
       def initialize(user, params)
@@ -15,7 +15,7 @@ module Actions
 
         task = Task.new(model_params)
 
-        task.save ? build_success_response(task) : build_database_error
+        task.save ? build_success_response(task) : build_database_error_response
       end
 
       private
@@ -25,7 +25,7 @@ module Actions
       end
 
       def validation_errors
-        build_validation_errors(validator.errors.to_h)
+        build_validation_errors_response(validator.errors.to_h)
       end
 
       def model_params

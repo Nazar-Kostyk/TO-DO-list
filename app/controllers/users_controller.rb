@@ -11,9 +11,9 @@ class UsersController < ApplicationController
     response = Actions::Users::CreateUser.new(permitted_create_params).call
 
     if response.success?
-      render_json_response(data: response.payload, serializer: UserSerializer)
+      render_json_response(data: response.payload, serializer: UserSerializer, status: :created)
     else
-      render_json_error1(response.error)
+      render_json_error(response.error)
     end
   end
 
@@ -23,7 +23,7 @@ class UsersController < ApplicationController
     if response.success?
       render_json_response(data: response.payload, serializer: UserSerializer)
     else
-      render_json_error1(response.error)
+      render_json_error(response.error)
     end
   end
 

@@ -2,7 +2,7 @@
 
 module Actions
   module Tasks
-    class GetSingleTask < BaseActionService
+    class GetSingleTask < BaseService
       attr_reader :user, :params
 
       def initialize(user, params)
@@ -25,7 +25,7 @@ module Actions
       end
 
       def validation_errors
-        build_validation_errors(validator.errors.to_h)
+        build_validation_errors_response(validator.errors.to_h)
       end
 
       def find_task

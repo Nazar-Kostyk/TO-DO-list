@@ -2,7 +2,7 @@
 
 module Actions
   module Tasks
-    class DestroyTask < BaseActionService
+    class DestroyTask < BaseService
       attr_reader :user, :params
 
       def initialize(user, params)
@@ -15,7 +15,7 @@ module Actions
 
         task = find_task
 
-        task.destroy_record ? build_success_response(I18n.t('notifications.resource_destroyed')) : build_database_error
+        task.destroy_record ? resource_successfully_destroyed : build_database_error_response
       end
 
       private
@@ -25,12 +25,16 @@ module Actions
       end
 
       def validation_errors
-        build_validation_errors(validator.errors.to_h)
+        build_validation_errors_response(validator.errors.to_h)
       end
 
       def find_task
         to_do_list = user.to_do_lists.find(params[:to_do_list_id])
         to_do_list.tasks.find(params[:id])
+      end
+
+      def resource_successfully_destroyed
+        build_success_response(I18n.t('notifications.resource_destroyed'))
       end
     end
   end

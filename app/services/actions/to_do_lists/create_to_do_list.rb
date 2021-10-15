@@ -2,7 +2,7 @@
 
 module Actions
   module ToDoLists
-    class CreateToDoList < BaseActionService
+    class CreateToDoList < BaseService
       attr_reader :user, :params
 
       def initialize(user, params)
@@ -15,7 +15,7 @@ module Actions
 
         to_do_list = ToDoList.new(model_params)
 
-        to_do_list.save ? build_success_response(to_do_list) : build_database_error
+        to_do_list.save ? build_success_response(to_do_list) : build_database_error_response
       end
 
       private
@@ -25,7 +25,7 @@ module Actions
       end
 
       def validation_errors
-        build_validation_errors(validator.errors.to_h)
+        build_validation_errors_response(validator.errors.to_h)
       end
 
       def model_params

@@ -2,6 +2,7 @@
 
 class ApplicationController < ActionController::API
   include JWTSessions::RailsAuthorization
+  include Builders::ErrorBuilder
 
   rescue_from JWTSessions::Errors::Unauthorized, with: :not_authorized
   rescue_from ActiveRecord::RecordNotFound, with: :not_found
@@ -15,47 +16,26 @@ class ApplicationController < ActionController::API
   end
 
   def not_found(exception)
-    render_json_error(status: :not_found, error_key: "#{exception.model.underscore}_not_found")
+    error =
+      build_error_by_translation_key(
+        status: :not_found,
+        translation_key: "#{exception.model.underscore}_not_found"
+      )
+
+    render_json_error(error)
   end
 
   def not_authorized
-    render_json_error(status: :unauthorized, error_key: 'unauthorized_request')
+    error =
+      build_error_by_translation_key(
+        status: :unauthorized,
+        translation_key: 'unauthorized_request'
+      )
+
+    render_json_error(error)
   end
 
-  # Will be removed in the refactoring PR.
-  def render_json_error(status:, error_key:)
-    code = status.is_a?(Symbol) ? Rack::Utils::SYMBOL_TO_STATUS_CODE[status] : 500
-
-    error = {
-      code: code,
-      title: I18n.t("error_messages.#{error_key}.title", default: ''),
-      detail: I18n.t("error_messages.#{error_key}.detail", default: '')
-    }.compact_blank
-
-    render json: { errors: [error] }, status: status
-  end
-
-  # Will be removed in the refactoring PR.
-  def render_json_validation_error(errors_hash)
-    errors =
-      errors_hash.map do |attribute_name, error_details|
-        error_details.map do |detail|
-          {
-            source: {
-              pointer: "/data/attributes/#{attribute_name}"
-            },
-            detail: detail
-          }
-        end
-      end.flatten
-
-    render json: { errors: errors }, status: :bad_request
-  end
-
-  # Method name has number 1 in the end, so it won't break already
-  # implemented logic which depends on the previous implementation of this method.
-  # This method will become the only one after the refactoring PR.
-  def render_json_error1(error)
+  def render_json_error(error)
     render json: { errors: Array.wrap(error[:details]) }, status: error[:status]
   end
 end

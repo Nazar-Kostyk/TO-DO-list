@@ -2,7 +2,7 @@
 
 module Actions
   module Users
-    class UpdateUser < BaseActionService
+    class UpdateUser < BaseService
       attr_reader :user, :params
 
       def initialize(user, params)
@@ -14,7 +14,7 @@ module Actions
         return validation_errors if validator.failure?
         return wrong_password_entered unless correct_password_provdided?
 
-        user.update(map_request_params_to_model_params) ? build_success_response(user) : build_database_error
+        user.update(map_request_params_to_model_params) ? build_success_response(user) : build_database_error_response
       end
 
       private
@@ -24,7 +24,7 @@ module Actions
       end
 
       def validation_errors
-        build_validation_errors(validator.errors.to_h)
+        build_validation_errors_response(validator.errors.to_h)
       end
 
       def correct_password_provdided?
@@ -35,7 +35,7 @@ module Actions
         build_failure_response(
           {
             status: :unauthorized,
-            details: error_details_by_translation_key('wrong_password')
+            details: build_error_details_by_translation_key('wrong_password')
           }
         )
       end

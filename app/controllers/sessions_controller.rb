@@ -5,9 +5,9 @@ class SessionsController < ApplicationController
     response = AuthenticationService.new(permitted_create_params).call
 
     if response.success?
-      render json: response.payload
+      render json: response.payload, status: :created
     else
-      render_json_error1(response.error)
+      render_json_error(response.error)
     end
   end
 

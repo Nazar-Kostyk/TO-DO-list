@@ -8,7 +8,7 @@ class AuthenticationService < BaseService
   end
 
   def call
-    return build_unauthorized_request_error unless user.authenticate(params[:password])
+    return unauthorized_request unless correct_password_provdided?
 
     session = JWTSessions::Session.new(payload: { user_id: user.id })
 
@@ -21,7 +21,11 @@ class AuthenticationService < BaseService
     @user ||= User.find_by!(email: params[:email])
   end
 
-  def build_unauthorized_request_error
+  def correct_password_provdided?
+    user.authenticate(params[:password])
+  end
+
+  def unauthorized_request
     build_failure_response(
       {
         status: :unauthorized,

@@ -5,7 +5,6 @@ RSpec.shared_examples 'database error' do
     {
       'errors' => [
         {
-          'code' => 422,
           'title' => I18n.t('error_messages.database_error.title'),
           'detail' => I18n.t('error_messages.database_error.detail')
         }
