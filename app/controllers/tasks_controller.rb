@@ -4,39 +4,32 @@ class TasksController < ApplicationController
   before_action :authorize_request
 
   def index
-    response = Tasks::GetListOfTasks.new(@current_user, permitted_index_params).call
+    response = Actions::Tasks::GetListOfTasks.new(@current_user, permitted_index_params).call
 
     if response.success?
       render_json_response(data: response.payload, serializer: TaskSerializer, options: { is_collection: true })
     else
-      render_json_validation_error(response.error)
+      render_json_error1(response.error)
     end
   end
 
   def show
-    response = Tasks::GetSingleTask.new(@current_user, permitted_show_params).call
+    response = Actions::Tasks::GetSingleTask.new(@current_user, permitted_show_params).call
 
     if response.success?
       render_json_response(data: response.payload, serializer: TaskSerializer)
     else
-      render_json_validation_error(response.error)
+      render_json_error1(response.error)
     end
   end
 
   def create
-    validator = Tasks::CreateParamsValidator.new.call(permitted_create_params)
+    response = Actions::Tasks::CreateTask.new(@current_user, permitted_create_params).call
 
-    if validator.success?
-      @to_do_list = @current_user.to_do_lists.find(permitted_create_params[:to_do_list_id])
-      @task = Task.new(model_params)
-
-      if @task.save
-        render_json_response(data: @task, serializer: TaskSerializer, status: :created)
-      else
-        render_json_error(status: :unprocessable_entity, error_key: 'database_error')
-      end
+    if response.success?
+      render_json_response(data: response.payload, serializer: TaskSerializer)
     else
-      render_json_validation_error(validator.errors.to_h)
+      render_json_error1(response.error)
     end
   end
 

@@ -51,4 +51,8 @@ class ApplicationController < ActionController::API
 
     render json: { errors: errors }, status: :bad_request
   end
+
+  def render_json_error1(error)
+    render json: { errors: Array.wrap(error[:details]) }, status: error[:status]
+  end
 end
