@@ -10,6 +10,5 @@ Rails.application.routes.draw do
     end
   end
 
-  post 'sessions', to: 'sessions#create'
-  post 'auth/login', to: 'authentication#login'
+  resource :sessions, only: :create
 end
