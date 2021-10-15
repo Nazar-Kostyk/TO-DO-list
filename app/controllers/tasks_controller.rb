@@ -34,19 +34,12 @@ class TasksController < ApplicationController
   end
 
   def update
-    validator = Tasks::UpdateParamsValidator.new.call(permitted_update_params)
+    response = Actions::Tasks::UpdateTask.new(@current_user, permitted_update_params).call
 
-    if validator.success?
-      @to_do_list = @current_user.to_do_lists.find(permitted_update_params[:to_do_list_id])
-      @task = @to_do_list.tasks.find(permitted_update_params[:id])
-
-      if @task.update(permitted_update_params.slice(:title))
-        render_json_response(data: @task, serializer: TaskSerializer)
-      else
-        render_json_error(status: :unprocessable_entity, error_key: 'database_error')
-      end
+    if response.success?
+      render_json_response(data: response.payload, serializer: TaskSerializer)
     else
-      render_json_validation_error(validator.errors.to_h)
+      render_json_error1(response.error)
     end
   end
 
@@ -81,9 +74,5 @@ class TasksController < ApplicationController
 
   def permitted_update_params
     params.permit(:to_do_list_id, :id, :title).to_h
-  end
-
-  def model_params
-    permitted_create_params.merge({ position: @to_do_list.tasks.size })
   end
 end
