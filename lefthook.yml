@@ -7,9 +7,6 @@ pre-commit:
     rubocop:
       tags: backend style
       run: bundle exec rubocop --parallel
-    best-practices:
-      tags: rails best practices
-      run: bundle exec rails_best_practices
     rspec:
       tags: code coverage
       run: bundle exec rspec

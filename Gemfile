@@ -34,7 +34,6 @@ group :development do
   gem 'bundler-leak', '>= 0.2.0'
   gem 'lefthook', '>= 0.7.6'
   gem 'listen', '~> 3.3'
-  gem 'rails_best_practices', '>= 1.21.0'
   gem 'rubocop', '>= 1.20.0', require: false
   gem 'rubocop-performance', '>= 1.11.5'
   gem 'rubocop-rails', '>= 2.11.3'
