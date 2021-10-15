@@ -7,7 +7,7 @@ RSpec.describe ApplicationController, :controller do
 
   describe '#authorize_request' do
     controller do
-      before_action :authorize_request
+      before_action :authorize_access_request!
 
       def index
         render json: { 'Hello' => 'world' }
@@ -20,21 +20,13 @@ RSpec.describe ApplicationController, :controller do
     end
 
     context 'when Authorization header is valid' do
-      context 'when user is found' do
-        let!(:user) { create(:user) }
-        let(:authorization_header) { JsonWebToken.encode(user_id: user.id) }
-        let(:expected_body) { { 'Hello' => 'world' } }
+      let!(:user) { create(:user) }
+      let(:authorization_header) { JWTSessions::Session.new(payload: { user_id: user.id }).login[:access] }
+      let(:expected_body) { { 'Hello' => 'world' } }
 
-        it 'returns correct response' do
-          expect(response).to be_ok
-          expect(JSON.parse(response.body)).to eq(expected_body)
-        end
-      end
-
-      context 'when user is not found' do
-        let(:authorization_header) { JsonWebToken.encode(user_id: SecureRandom.uuid) }
-
-        it_behaves_like 'entity not found', User
+      it 'returns correct response' do
+        expect(response).to be_ok
+        expect(JSON.parse(response.body)).to eq(expected_body)
       end
     end
 

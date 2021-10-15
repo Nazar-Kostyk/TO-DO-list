@@ -14,7 +14,7 @@ RSpec.describe ToDoListsController, type: :request do
     let!(:user) { create(:user_with_to_do_lists) }
 
     context 'when Authorization header is valid' do
-      let(:authorization_header) { JsonWebToken.encode(user_id: user.id) }
+      let(:authorization_header) { JWTSessions::Session.new(payload: { user_id: user.id }).login[:access] }
 
       it 'returns correct response' do
         endpoint_call
@@ -45,7 +45,7 @@ RSpec.describe ToDoListsController, type: :request do
     let(:to_do_list_id) { user.to_do_lists.sample.id }
 
     context 'when Authorization header is valid' do
-      let(:authorization_header) { JsonWebToken.encode(user_id: user.id) }
+      let(:authorization_header) { JWTSessions::Session.new(payload: { user_id: user.id }).login[:access] }
 
       context 'when params are valid' do
         it 'returns correct response' do
@@ -111,7 +111,7 @@ RSpec.describe ToDoListsController, type: :request do
     let!(:user) { create(:user) }
 
     context 'when Authorization header is valid' do
-      let(:authorization_header) { JsonWebToken.encode(user_id: user.id) }
+      let(:authorization_header) { JWTSessions::Session.new(payload: { user_id: user.id }).login[:access] }
 
       context 'when params are valid' do
         let(:params) { { title: Faker::Lorem.sentence, description: Faker::Lorem.paragraph } }
@@ -194,7 +194,7 @@ RSpec.describe ToDoListsController, type: :request do
     let(:to_do_list_id) { user.to_do_lists.sample.id }
 
     context 'when Authorization header is valid' do
-      let(:authorization_header) { JsonWebToken.encode(user_id: user.id) }
+      let(:authorization_header) { JWTSessions::Session.new(payload: { user_id: user.id }).login[:access] }
 
       context 'when params are valid' do
         let(:params) { { title: Faker::Lorem.sentence, description: Faker::Lorem.paragraph } }
@@ -289,7 +289,7 @@ RSpec.describe ToDoListsController, type: :request do
     let(:to_do_list_id) { user.to_do_lists.sample.id }
 
     context 'when Authorization header is valid' do
-      let(:authorization_header) { JsonWebToken.encode(user_id: user.id) }
+      let(:authorization_header) { JWTSessions::Session.new(payload: { user_id: user.id }).login[:access] }
 
       context 'when params are valid' do
         it 'deletes to-do list' do

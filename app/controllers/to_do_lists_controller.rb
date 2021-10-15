@@ -4,7 +4,7 @@ class ToDoListsController < ApplicationController
   before_action :authorize_access_request!
 
   def index
-    render_json_response(data: @current_user.to_do_lists.includes(:tasks),
+    render_json_response(data: current_user.to_do_lists.includes(:tasks),
                          serializer: ToDoListSerializer,
                          options: { is_collection: true })
   end
@@ -13,7 +13,7 @@ class ToDoListsController < ApplicationController
     validator = ToDoLists::ShowParamsValidator.new.call(permitted_show_params)
 
     if validator.success?
-      render_json_response(data: @current_user.to_do_lists.find(permitted_show_params[:id]),
+      render_json_response(data: current_user.to_do_lists.find(permitted_show_params[:id]),
                            serializer: ToDoListSerializer)
     else
       render_json_validation_error(validator.errors.to_h)
@@ -35,11 +35,13 @@ class ToDoListsController < ApplicationController
     end
   end
 
-  def update
+  # Temporarly disabling rubocop offense.
+  # Will be fixed in a separate PR.
+  def update # rubocop:disable Metrics/AbcSize
     validator = ToDoLists::UpdateParamsValidator.new.call(permitted_update_params)
 
     if validator.success?
-      @to_do_list = @current_user.to_do_lists.find(permitted_show_params[:id])
+      @to_do_list = current_user.to_do_lists.find(permitted_show_params[:id])
 
       if @to_do_list.update(permitted_update_params.slice(:title, :description))
         render_json_response(data: @to_do_list, serializer: ToDoListSerializer)
@@ -55,7 +57,7 @@ class ToDoListsController < ApplicationController
     validator = ToDoLists::DestroyParamsValidator.new.call(permitted_destroy_params)
 
     if validator.success?
-      @to_do_list = @current_user.to_do_lists.find(permitted_show_params[:id])
+      @to_do_list = current_user.to_do_lists.find(permitted_show_params[:id])
       if @to_do_list.destroy
         head :no_content
       else
@@ -85,6 +87,6 @@ class ToDoListsController < ApplicationController
   end
 
   def model_params
-    permitted_create_params.merge({ user_id: @current_user.id }).compact_blank
+    permitted_create_params.merge({ user_id: current_user.id }).compact_blank
   end
 end

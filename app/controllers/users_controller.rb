@@ -4,7 +4,7 @@ class UsersController < ApplicationController
   before_action :authorize_access_request!, except: :create
 
   def show
-    render_json_response(data: @current_user, serializer: UserSerializer)
+    render_json_response(data: current_user, serializer: UserSerializer)
   end
 
   def create
@@ -28,8 +28,8 @@ class UsersController < ApplicationController
     if validator.success?
       return render_json_error(status: :unauthorized, error_key: 'wrong_password') unless correct_password_provdided?
 
-      if @current_user.update(map_request_params_to_model_params)
-        render_json_response(data: @current_user, serializer: UserSerializer)
+      if current_user.update(map_request_params_to_model_params)
+        render_json_response(data: current_user, serializer: UserSerializer)
       else
         render_json_error(status: :unprocessable_entity, error_key: 'database_error')
       end

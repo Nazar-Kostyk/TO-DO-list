@@ -14,7 +14,7 @@ RSpec.describe UsersController, type: :request do
     let!(:user) { create(:user) }
 
     context 'when Authorization header is valid' do
-      let(:authorization_header) { JsonWebToken.encode(user_id: user.id) }
+      let(:authorization_header) { JWTSessions::Session.new(payload: { user_id: user.id }).login[:access] }
 
       it 'returns correct response' do
         endpoint_call
@@ -110,7 +110,7 @@ RSpec.describe UsersController, type: :request do
     let!(:user) { create(:user, password: password) }
 
     context 'when Authorization header is valid' do
-      let(:authorization_header) { JsonWebToken.encode(user_id: user.id) }
+      let(:authorization_header) { JWTSessions::Session.new(payload: { user_id: user.id }).login[:access] }
 
       context 'when valid params provided' do
         let(:new_password) { Faker::Lorem.characters(number: User::PASSWORD_MIN_LENGTH) }
