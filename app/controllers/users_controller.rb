@@ -8,33 +8,22 @@ class UsersController < ApplicationController
   end
 
   def create
-    validator = Users::CreateParamsValidator.new.call(permitted_create_params)
+    response = Actions::Users::CreateUser.new(permitted_create_params).call
 
-    if validator.success?
-      @user = User.new(permitted_create_params.slice(:name, :surname, :email, :password))
-      if @user.save
-        render_json_response(data: @user, serializer: UserSerializer, status: :created)
-      else
-        render_json_error(status: :unprocessable_entity, error_key: 'database_error')
-      end
+    if response.success?
+      render_json_response(data: response.payload, serializer: UserSerializer)
     else
-      render_json_validation_error(validator.errors.to_h)
+      render_json_error1(response.error)
     end
   end
 
   def update
-    validator = Users::UpdateParamsValidator.new.call(permitted_update_params)
+    response = Actions::Users::UpdateUser.new(current_user, permitted_update_params).call
 
-    if validator.success?
-      return render_json_error(status: :unauthorized, error_key: 'wrong_password') unless correct_password_provdided?
-
-      if current_user.update(map_request_params_to_model_params)
-        render_json_response(data: current_user, serializer: UserSerializer)
-      else
-        render_json_error(status: :unprocessable_entity, error_key: 'database_error')
-      end
+    if response.success?
+      render_json_response(data: response.payload, serializer: UserSerializer)
     else
-      render_json_validation_error(validator.errors.to_h)
+      render_json_error1(response.error)
     end
   end
 
@@ -46,17 +35,5 @@ class UsersController < ApplicationController
 
   def permitted_update_params
     params.permit(:name, :surname, :email, :current_password, :new_password, :new_password_confirmation).to_h
-  end
-
-  def correct_password_provdided?
-    current_user.authenticate(permitted_update_params[:current_password])
-  end
-
-  def map_request_params_to_model_params
-    request_params = permitted_update_params
-
-    request_params.slice(:name, :surname, :email)
-                  .merge({ password: request_params[:new_password] })
-                  .compact
   end
 end
