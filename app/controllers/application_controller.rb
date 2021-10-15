@@ -22,6 +22,7 @@ class ApplicationController < ActionController::API
     render_json_error(status: :unauthorized, error_key: 'unauthorized_request')
   end
 
+  # Will be removed in the refactoring PR.
   def render_json_error(status:, error_key:)
     code = status.is_a?(Symbol) ? Rack::Utils::SYMBOL_TO_STATUS_CODE[status] : 500
 
@@ -34,6 +35,7 @@ class ApplicationController < ActionController::API
     render json: { errors: [error] }, status: status
   end
 
+  # Will be removed in the refactoring PR.
   def render_json_validation_error(errors_hash)
     errors =
       errors_hash.map do |attribute_name, error_details|
@@ -48,5 +50,12 @@ class ApplicationController < ActionController::API
       end.flatten
 
     render json: { errors: errors }, status: :bad_request
+  end
+
+  # Method name has number 1 in the end, so it won't break already
+  # implemented logic which depends on the previous implementation of this method.
+  # This method will become the only one after the refactoring PR.
+  def render_json_error1(error)
+    render json: { errors: Array.wrap(error[:details]) }, status: error[:status]
   end
 end

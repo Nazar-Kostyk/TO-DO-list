@@ -11,6 +11,10 @@ AllCops:
     - 'builds/**/*'
     - 'vendor/**/*'
 
+Lint/MissingSuper:
+  Exclude:
+    - 'app/services/**/*'
+
 Metrics/BlockLength:
   Enabled: false
 Metrics/MethodLength:

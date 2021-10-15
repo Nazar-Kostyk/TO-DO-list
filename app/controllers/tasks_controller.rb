@@ -4,75 +4,62 @@ class TasksController < ApplicationController
   before_action :authorize_access_request!
 
   def index
-    validator = Tasks::IndexParamsValidator.new.call(permitted_index_params)
+    response = Actions::Tasks::GetListOfTasks.new(@current_user, permitted_index_params).call
 
-    if validator.success?
-      @to_do_list = @current_user.to_do_lists.find(permitted_index_params[:to_do_list_id])
-      render_json_response(data: @to_do_list.tasks, serializer: TaskSerializer, options: { is_collection: true })
+    if response.success?
+      render_json_response(data: response.payload, serializer: TaskSerializer, options: { is_collection: true })
     else
-      render_json_validation_error(validator.errors.to_h)
+      render_json_error1(response.error)
     end
   end
 
   def show
-    validator = Tasks::ShowParamsValidator.new.call(permitted_show_params)
+    response = Actions::Tasks::GetSingleTask.new(@current_user, permitted_show_params).call
 
-    if validator.success?
-      @to_do_list = @current_user.to_do_lists.find(permitted_show_params[:to_do_list_id])
-      @task = @to_do_list.tasks.find(permitted_show_params[:id])
-
-      render_json_response(data: @task, serializer: TaskSerializer)
+    if response.success?
+      render_json_response(data: response.payload, serializer: TaskSerializer)
     else
-      render_json_validation_error(validator.errors.to_h)
+      render_json_error1(response.error)
     end
   end
 
   def create
-    validator = Tasks::CreateParamsValidator.new.call(permitted_create_params)
+    response = Actions::Tasks::CreateTask.new(@current_user, permitted_create_params).call
 
-    if validator.success?
-      @to_do_list = @current_user.to_do_lists.find(permitted_create_params[:to_do_list_id])
-      @task = Task.new(model_params)
-
-      if @task.save
-        render_json_response(data: @task, serializer: TaskSerializer, status: :created)
-      else
-        render_json_error(status: :unprocessable_entity, error_key: 'database_error')
-      end
+    if response.success?
+      render_json_response(data: response.payload, serializer: TaskSerializer)
     else
-      render_json_validation_error(validator.errors.to_h)
+      render_json_error1(response.error)
     end
   end
 
   def update
-    validator = Tasks::UpdateParamsValidator.new.call(permitted_update_params)
+    response = Actions::Tasks::UpdateTask.new(@current_user, permitted_update_params).call
 
-    if validator.success?
-      @to_do_list = @current_user.to_do_lists.find(permitted_update_params[:to_do_list_id])
-      @task = @to_do_list.tasks.find(permitted_update_params[:id])
-
-      if @task.update(permitted_update_params.slice(:title))
-        render_json_response(data: @task, serializer: TaskSerializer)
-      else
-        render_json_error(status: :unprocessable_entity, error_key: 'database_error')
-      end
+    if response.success?
+      render_json_response(data: response.payload, serializer: TaskSerializer)
     else
-      render_json_validation_error(validator.errors.to_h)
+      render_json_error1(response.error)
     end
   end
 
   def destroy
-    validator = Tasks::UpdateParamsValidator.new.call(permitted_update_params)
+    response = Actions::Tasks::DestroyTask.new(@current_user, permitted_destroy_params).call
 
-    if validator.success?
-      @to_do_list = @current_user.to_do_lists.find(permitted_update_params[:to_do_list_id])
-      @task = @to_do_list.tasks.find(permitted_update_params[:id])
-
-      @task.destroy_record!
-
+    if response.success?
       head :no_content
     else
-      render_json_validation_error(validator.errors.to_h)
+      render_json_error1(response.error)
+    end
+  end
+
+  def change_position
+    response = Actions::Tasks::ChangePositionOfTask.new(@current_user, permitted_change_position_params).call
+
+    if response.success?
+      render_json_response(data: response.payload, serializer: TaskSerializer)
+    else
+      render_json_error1(response.error)
     end
   end
 
@@ -94,7 +81,11 @@ class TasksController < ApplicationController
     params.permit(:to_do_list_id, :id, :title).to_h
   end
 
-  def model_params
-    permitted_create_params.merge({ position: @to_do_list.tasks.size })
+  def permitted_destroy_params
+    params.permit(:to_do_list_id, :id).to_h
+  end
+
+  def permitted_change_position_params
+    params.permit(:to_do_list_id, :id, :new_position).to_h
   end
 end

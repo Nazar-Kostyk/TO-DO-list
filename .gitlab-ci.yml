@@ -36,12 +36,6 @@ rubocop:
   script:
     - bundle exec rubocop --parallel -c .rubocop.yml
 
-best_practices:
-  extends: .build
-  stage: running_linters
-  script:
-    - bundle exec rails_best_practices
-
 gems-audit:
   extends: .build
   stage: running_linters
