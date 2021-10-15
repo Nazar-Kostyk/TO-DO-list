@@ -53,6 +53,16 @@ class TasksController < ApplicationController
     end
   end
 
+  def change_position
+    response = Actions::Tasks::ChangePositionOfTask.new(@current_user, permitted_change_position_params).call
+
+    if response.success?
+      render_json_response(data: response.payload, serializer: TaskSerializer)
+    else
+      render_json_error1(response.error)
+    end
+  end
+
   private
 
   def permitted_index_params
@@ -73,5 +83,9 @@ class TasksController < ApplicationController
 
   def permitted_destroy_params
     params.permit(:to_do_list_id, :id).to_h
+  end
+
+  def permitted_change_position_params
+    params.permit(:to_do_list_id, :id, :new_position).to_h
   end
 end

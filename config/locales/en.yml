@@ -39,6 +39,8 @@ en:
       under_minimum_length: "The %{field} field should be at least %{length} characters long."
       exceeds_maximum_length: "The %{field} field exceeds the maximum character length of %{length}."
       passwords_do_not_match: "Password and password confirmation do not match."
+      min_value: "The %{field} field must be greater than or equal to %{number}."
+      max_value: "The %{field} field must be less than or equal to %{number}."
   error_messages:
     database_error:
       title: "Database error"

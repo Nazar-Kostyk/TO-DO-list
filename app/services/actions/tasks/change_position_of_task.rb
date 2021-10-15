@@ -2,7 +2,7 @@
 
 module Actions
   module Tasks
-    class GetListOfTasks < BaseActionService
+    class ChangePositionOfTask < BaseActionService
       attr_reader :user, :params
 
       def initialize(user, params)
@@ -13,24 +13,24 @@ module Actions
       def call
         return validation_errors if validator.failure?
 
-        tasks = retrieve_tasks
+        task = find_task
 
-        build_success_response(tasks)
+        task.update_position(params[:new_position]) ? build_success_response(task) : build_database_error
       end
 
       private
 
       def validator
-        @validator ||= ::Tasks::IndexParamsValidator.new.call(params)
+        @validator ||= ::Tasks::ChangePositionParamsValidator.new.call(params)
       end
 
       def validation_errors
         build_validation_errors(validator.errors.to_h)
       end
 
-      def retrieve_tasks
+      def find_task
         to_do_list = user.to_do_lists.find(params[:to_do_list_id])
-        to_do_list.tasks.order(:position)
+        to_do_list.tasks.find(params[:id])
       end
     end
   end

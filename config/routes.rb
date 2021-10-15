@@ -5,7 +5,9 @@ Rails.application.routes.draw do
 
   resource :user, only: %i[show create update]
   resources :to_do_lists do
-    resources :tasks
+    resources :tasks do
+      patch :change_position, on: :member
+    end
   end
 
   post 'auth/login', to: 'authentication#login'
