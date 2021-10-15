@@ -19,10 +19,10 @@ pre-push:
   commands:
     gems-audit:
       tags: backend security
-      run: bundle exec bundler-audit
+      run: bundle exec bundle-audit update && bundle exec bundle-audit
     dependencies-check:
       tags: backend security
-      run: bundle exec bundler-leak
-    # brakeman:
-    #   tags: backend security
-    #   run: bundle exec brakeman --rails6 -A -k --no-skip-vendor
+      run: bundle exec bundler-leak update && bundle exec bundle-leak
+    brakeman:
+      tags: backend security
+      run: bundle exec brakeman --rails6 -A -k --no-skip-vendor

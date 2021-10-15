@@ -69,7 +69,7 @@ RSpec.describe ApplicationController, :controller do
       end
     end
 
-    context 'when a list of resources provided' do
+    xcontext 'when a list of resources provided' do
       controller do
         def index
           users = Array.new(3) do

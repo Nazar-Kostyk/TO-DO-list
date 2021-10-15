@@ -35,10 +35,10 @@ class Task < ApplicationRecord
 
       if position < new_position
         Task.where('to_do_list_id = ? AND position > ? AND position <= ?', to_do_list_id, position, new_position)
-            .update_all('position = position - 1')
+            .update_all('position = position - 1') # rubocop:disable Rails/SkipsModelValidations
       else
         Task.where('to_do_list_id = ? AND position >= ? AND position < ?', to_do_list_id, new_position, position)
-            .update_all('position = position + 1')
+            .update_all('position = position + 1') # rubocop:disable Rails/SkipsModelValidations
       end
 
       update!(position: new_position)
@@ -53,7 +53,7 @@ class Task < ApplicationRecord
       ActiveRecord::Base.connection.execute('SET CONSTRAINTS index_tasks_on_to_do_list_id_and_position DEFERRED')
 
       destroy!
-      Task.where('to_do_list_id = ? AND position > ?', to_do_list_id, position).update_all('position = position - 1')
+      Task.where('to_do_list_id = ? AND position > ?', to_do_list_id, position).update_all('position = position - 1') # rubocop:disable Rails/SkipsModelValidations
     end
   rescue ActiveRecord::RecordNotDestroyed
     false
