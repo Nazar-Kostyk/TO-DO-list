@@ -1,23 +1,13 @@
 # frozen_string_literal: true
 
 module Users
-  class CreateParamsValidator < Common::BaseValidator
-    params(Schemas::Users::CreateUserSchema)
-
-    register_macro(:min_length) do |macro:|
-      min = macro.args[0]
-
-      key.failure(:under_minimum_length, field: key.path.keys[0], length: min) if value.size < min
-    end
-
-    register_macro(:max_length) do |macro:|
-      max = macro.args[0]
-
-      key.failure(:exceeds_maximum_length, field: key.path.keys[0], length: max) if value.size > max
-    end
-
-    register_macro(:email_format) do
-      key.failure(:invalid_format, field: :email, format_name: :email) if value && !EMAIL_FORMAT.match?(value)
+  class CreateParamsValidator < BaseValidator
+    params do
+      required(:name).filled(:string)
+      required(:surname).filled(:string)
+      required(:email).filled(:string)
+      required(:password).filled(:string)
+      required(:password_confirmation).filled(:string)
     end
 
     register_macro(:email_uniqueness) do

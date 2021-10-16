@@ -1,17 +1,11 @@
 # frozen_string_literal: true
 
 module ToDoLists
-  class UpdateParamsValidator < Common::BaseValidator
-    params(Schemas::ToDoLists::UpdateToDoListSchema)
-
-    register_macro(:uuid_format) do
-      key.failure(:invalid_format, field: :id, format_name: :UUID) unless UUID_FORMAT.match?(value)
-    end
-
-    register_macro(:max_length) do |macro:|
-      max = macro.args[0]
-
-      key.failure(:exceeds_maximum_length, field: key.path.keys[0], length: max) if value && value.size > max
+  class UpdateParamsValidator < BaseValidator
+    params do
+      required(:id).filled(:string)
+      optional(:title).maybe(:string)
+      optional(:description).maybe(:string)
     end
 
     rule(:id).validate(:uuid_format)

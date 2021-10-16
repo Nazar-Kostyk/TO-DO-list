@@ -1,23 +1,14 @@
 # frozen_string_literal: true
 
 module Users
-  class UpdateParamsValidator < Common::BaseValidator
-    params(Schemas::Users::UpdateUserSchema)
-
-    register_macro(:min_length) do |macro:|
-      min = macro.args[0]
-
-      key.failure(:under_minimum_length, field: key.path.keys[0], length: min) if value && value.size < min
-    end
-
-    register_macro(:max_length) do |macro:|
-      max = macro.args[0]
-
-      key.failure(:exceeds_maximum_length, field: key.path.keys[0], length: max) if value && value.size > max
-    end
-
-    register_macro(:email_format) do
-      key.failure(:invalid_format, field: :email, format_name: :email) if value && !EMAIL_FORMAT.match?(value)
+  class UpdateParamsValidator < BaseValidator
+    params do
+      optional(:name).filled(:string)
+      optional(:surname).filled(:string)
+      optional(:email).filled(:string)
+      required(:current_password).filled(:string)
+      optional(:new_password).filled(:string)
+      optional(:new_password_confirmation).filled(:string)
     end
 
     register_macro(:email_uniqueness) do
