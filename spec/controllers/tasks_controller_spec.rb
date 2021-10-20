@@ -25,14 +25,13 @@ RSpec.describe TasksController, type: :request do
     end
 
     context 'when params are invalid' do
+      before do
+        endpoint_call
+      end
+
       let(:to_do_list) { 'invalid' }
 
-      it 'returns correct response' do
-        endpoint_call
-
-        expect(response).to be_bad_request
-        expect(JSON.parse(response.body)).to match_json_schema('incorrect_response/validation_errors')
-      end
+      it_behaves_like 'validation errors'
     end
   end
 
@@ -57,14 +56,13 @@ RSpec.describe TasksController, type: :request do
     end
 
     context 'when params are invalid' do
+      before do
+        endpoint_call
+      end
+
       let(:params) { { title: Faker::Lorem.characters(number: Task::TITLE_MAX_LENGTH + 1) } }
 
-      it 'returns correct response' do
-        endpoint_call
-
-        expect(response).to be_bad_request
-        expect(JSON.parse(response.body)).to match_json_schema('incorrect_response/validation_errors')
-      end
+      it_behaves_like 'validation errors'
     end
   end
 
@@ -85,14 +83,13 @@ RSpec.describe TasksController, type: :request do
     end
 
     context 'when params are invalid' do
+      before do
+        endpoint_call
+      end
+
       let(:task) { 'invalid' }
 
-      it 'returns correct response' do
-        endpoint_call
-
-        expect(response).to be_bad_request
-        expect(JSON.parse(response.body)).to match_json_schema('incorrect_response/validation_errors')
-      end
+      it_behaves_like 'validation errors'
     end
   end
 
@@ -114,14 +111,13 @@ RSpec.describe TasksController, type: :request do
     end
 
     context 'when params are invalid' do
+      before do
+        endpoint_call
+      end
+
       let(:params) { { title: Faker::Lorem.characters(number: Task::TITLE_MAX_LENGTH + 1) } }
 
-      it 'returns correct response' do
-        endpoint_call
-
-        expect(response).to be_bad_request
-        expect(JSON.parse(response.body)).to match_json_schema('incorrect_response/validation_errors')
-      end
+      it_behaves_like 'validation errors'
     end
   end
 
@@ -146,14 +142,13 @@ RSpec.describe TasksController, type: :request do
     end
 
     context 'when params are invalid' do
+      before do
+        endpoint_call
+      end
+
       let(:task) { 'invalid' }
 
-      it 'returns correct response' do
-        endpoint_call
-
-        expect(response).to be_bad_request
-        expect(JSON.parse(response.body)).to match_json_schema('incorrect_response/validation_errors')
-      end
+      it_behaves_like 'validation errors'
     end
   end
 
@@ -182,14 +177,13 @@ RSpec.describe TasksController, type: :request do
     end
 
     context 'when params are invalid' do
+      before do
+        endpoint_call
+      end
+
       let(:params) { { new_position: -1 } }
 
-      it 'returns correct response' do
-        endpoint_call
-
-        expect(response).to be_bad_request
-        expect(JSON.parse(response.body)).to match_json_schema('incorrect_response/validation_errors')
-      end
+      it_behaves_like 'validation errors'
     end
   end
 end

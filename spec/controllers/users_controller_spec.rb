@@ -54,14 +54,13 @@ RSpec.describe UsersController, type: :request do
     end
 
     context 'when params are invalid' do
+      before do
+        endpoint_call
+      end
+
       let(:params) { {} }
 
-      it 'returns correct response' do
-        endpoint_call
-
-        expect(response).to be_bad_request
-        expect(JSON.parse(response.body)).to match_json_schema('incorrect_response/validation_errors')
-      end
+      it_behaves_like 'validation errors'
     end
   end
 
@@ -97,14 +96,13 @@ RSpec.describe UsersController, type: :request do
     end
 
     context 'when params are invalid' do
+      before do
+        endpoint_call
+      end
+
       let(:params) { {} }
 
-      it 'returns correct response' do
-        endpoint_call
-
-        expect(response).to be_bad_request
-        expect(JSON.parse(response.body)).to match_json_schema('incorrect_response/validation_errors')
-      end
+      it_behaves_like 'validation errors'
     end
   end
 end
