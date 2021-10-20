@@ -23,6 +23,7 @@ module TodoList
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 6.1
+    # Enable columns constraints in the test database
     config.active_record.schema_format = :sql
 
     # Configuration for the application, engines, and railties goes here.

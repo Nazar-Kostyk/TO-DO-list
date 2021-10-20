@@ -17,10 +17,6 @@ module Actions
 
       private
 
-      def validation_errors
-        build_validation_errors_response(validator.errors.to_h)
-      end
-
       def retrieve_to_do_lists
         user.to_do_lists.includes(:tasks)
       end
