@@ -26,6 +26,6 @@ FactoryBot.define do
     to_do_list
     title { Faker::Lorem.sentence }
     is_completed { Faker::Boolean.boolean }
-    sequence(:position)
+    sequence(:position, 0)
   end
 end
