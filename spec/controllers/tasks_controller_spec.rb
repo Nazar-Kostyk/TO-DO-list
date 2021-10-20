@@ -12,7 +12,7 @@ RSpec.describe TasksController, type: :request do
 
   describe '#index' do
     let(:endpoint_call) do
-      get to_do_list_tasks_path(to_do_list), headers: headers
+      get to_do_list_tasks_path(to_do_list), headers: headers, as: :json
     end
 
     context 'when params are valid' do
@@ -38,7 +38,7 @@ RSpec.describe TasksController, type: :request do
 
   describe '#create' do
     let(:endpoint_call) do
-      post to_do_list_tasks_path(to_do_list), params: params, headers: headers
+      post to_do_list_tasks_path(to_do_list), params: params, headers: headers, as: :json
     end
 
     context 'when params are valid' do
@@ -70,7 +70,7 @@ RSpec.describe TasksController, type: :request do
 
   describe '#show' do
     let(:endpoint_call) do
-      get to_do_list_task_path(to_do_list, task), headers: headers
+      get to_do_list_task_path(to_do_list, task), headers: headers, as: :json
     end
 
     context 'when params are valid' do
@@ -98,7 +98,7 @@ RSpec.describe TasksController, type: :request do
 
   describe '#update' do
     let(:endpoint_call) do
-      put to_do_list_task_path(to_do_list, task), params: params, headers: headers
+      put to_do_list_task_path(to_do_list, task), params: params, headers: headers, as: :json
     end
     let(:task) { to_do_list.tasks.sample }
 
@@ -127,7 +127,7 @@ RSpec.describe TasksController, type: :request do
 
   describe '#destroy' do
     let(:endpoint_call) do
-      delete to_do_list_task_path(to_do_list, task), headers: headers
+      delete to_do_list_task_path(to_do_list, task), headers: headers, as: :json
     end
 
     context 'when params are valid' do
@@ -159,7 +159,7 @@ RSpec.describe TasksController, type: :request do
 
   describe '#change_position' do
     let(:endpoint_call) do
-      patch change_position_to_do_list_task_path(to_do_list, task), params: params, headers: headers
+      patch change_position_to_do_list_task_path(to_do_list, task), params: params, headers: headers, as: :json
     end
     let(:task) { to_do_list.tasks.sample }
 
@@ -170,7 +170,7 @@ RSpec.describe TasksController, type: :request do
       it 'updates task\'s position' do
         endpoint_call
 
-        expect(JSON.parse(response.body)['position']).to eq(new_position)
+        expect(JSON.parse(response.body)['data']['attributes']['position']).to eq(new_position)
       end
 
       it 'returns correct response' do
