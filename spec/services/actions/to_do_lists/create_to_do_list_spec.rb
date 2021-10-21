@@ -22,8 +22,6 @@ RSpec.describe Actions::ToDoLists::CreateToDoList do
           allow_any_instance_of(ToDoList).to receive(:save).and_return(nil)
         end
 
-        let(:params) { attributes_for(:to_do_list) }
-
         it_behaves_like 'database error'
       end
     end

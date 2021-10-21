@@ -40,8 +40,6 @@ RSpec.describe Actions::Tasks::DestroyTask do
           allow_any_instance_of(Task).to receive(:destroy_record).and_return(nil)
         end
 
-        let(:params) { { to_do_list_id: to_do_list.id, id: task.id } }
-
         it_behaves_like 'database error'
       end
     end

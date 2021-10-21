@@ -12,7 +12,7 @@ RSpec.describe Actions::Tasks::GetSingleTask do
       let(:params) { { to_do_list_id: to_do_list.id, id: task.id } }
 
       it 'returns correct payload' do
-        expect(result.payload).to eq(Task.find(task.id))
+        expect(result.payload).to eq(task)
       end
 
       context 'when to-do list not found' do

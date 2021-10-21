@@ -13,7 +13,7 @@ RSpec.describe Actions::Tasks::ChangePositionOfTask do
       let(:params) { { to_do_list_id: to_do_list.id, id: task.id, new_position: new_position } }
 
       it 'returns correct payload' do
-        expect(result.payload).to eq(Task.find(task.id))
+        expect(result.payload).to eq(task)
         expect(result.payload[:position]).to eq(new_position)
       end
 
@@ -37,8 +37,6 @@ RSpec.describe Actions::Tasks::ChangePositionOfTask do
         before do
           allow_any_instance_of(Task).to receive(:update_position).and_return(nil)
         end
-
-        let(:params) { { to_do_list_id: to_do_list.id, id: task.id, new_position: new_position } }
 
         it_behaves_like 'database error'
       end

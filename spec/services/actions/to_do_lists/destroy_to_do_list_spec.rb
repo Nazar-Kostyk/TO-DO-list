@@ -31,8 +31,6 @@ RSpec.describe Actions::ToDoLists::DestroyToDoList do
           allow_any_instance_of(ToDoList).to receive(:destroy).and_return(nil)
         end
 
-        let(:params) { { id: to_do_list_id } }
-
         it_behaves_like 'database error'
       end
     end

@@ -31,8 +31,6 @@ RSpec.describe Actions::Tasks::CreateTask do
           allow_any_instance_of(Task).to receive(:save).and_return(nil)
         end
 
-        let(:params) { { to_do_list_id: to_do_list.id, title: Faker::Tea.variety } }
-
         it_behaves_like 'database error'
       end
     end

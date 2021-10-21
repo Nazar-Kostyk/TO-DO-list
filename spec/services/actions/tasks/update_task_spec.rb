@@ -12,7 +12,7 @@ RSpec.describe Actions::Tasks::UpdateTask do
       let(:params) { { to_do_list_id: to_do_list.id, id: task.id, title: Faker::Tea.variety } }
 
       it 'returns correct payload' do
-        expect(result.payload).to eq(Task.find(task.id))
+        expect(result.payload).to eq(task)
         expect(result.payload[:title]).to eq(params[:title])
       end
 
@@ -36,8 +36,6 @@ RSpec.describe Actions::Tasks::UpdateTask do
         before do
           allow_any_instance_of(Task).to receive(:update).and_return(nil)
         end
-
-        let(:params) { { to_do_list_id: to_do_list.id, id: task.id, title: Faker::Tea.variety } }
 
         it_behaves_like 'database error'
       end

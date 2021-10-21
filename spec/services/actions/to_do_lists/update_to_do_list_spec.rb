@@ -11,7 +11,7 @@ RSpec.describe Actions::ToDoLists::UpdateToDoList do
       let(:params) { { id: to_do_list_id }.merge(attributes_for(:to_do_list)) }
 
       it 'returns correct payload' do
-        expect(result.payload).to eq(ToDoList.find(to_do_list_id))
+        expect(result.payload).to eq(user.to_do_lists.find(to_do_list_id))
         expect(result.payload[:title]).to eq(params[:title])
         expect(result.payload[:description]).to eq(params[:description])
       end
@@ -28,8 +28,6 @@ RSpec.describe Actions::ToDoLists::UpdateToDoList do
         before do
           allow_any_instance_of(ToDoList).to receive(:update).and_return(nil)
         end
-
-        let(:params) { { id: to_do_list_id }.merge(attributes_for(:to_do_list)) }
 
         it_behaves_like 'database error'
       end
