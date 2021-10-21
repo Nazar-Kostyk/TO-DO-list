@@ -4,7 +4,7 @@ class ToDoListsController < ApplicationController
   before_action :authorize_access_request!
 
   def index
-    response = Actions::ToDoLists::GetListOfToDoLists.new(current_user).call
+    response = ToDoLists::GetListOfToDoLists.new(current_user).call
 
     if response.success?
       render_json_response(data: response.payload, serializer: ToDoListSerializer, options: { is_collection: true })
@@ -14,7 +14,7 @@ class ToDoListsController < ApplicationController
   end
 
   def show
-    response = Actions::ToDoLists::GetSingleToDoList.new(current_user, permitted_show_params).call
+    response = ToDoLists::GetSingleToDoList.new(current_user, permitted_show_params).call
 
     if response.success?
       render_json_response(data: response.payload, serializer: ToDoListSerializer)
@@ -24,7 +24,7 @@ class ToDoListsController < ApplicationController
   end
 
   def create
-    response = Actions::ToDoLists::CreateToDoList.new(current_user, permitted_create_params).call
+    response = ToDoLists::CreateToDoList.new(current_user, permitted_create_params).call
 
     if response.success?
       render_json_response(data: response.payload, serializer: ToDoListSerializer, status: :created)
@@ -34,7 +34,7 @@ class ToDoListsController < ApplicationController
   end
 
   def update
-    response = Actions::ToDoLists::UpdateToDoList.new(current_user, permitted_update_params).call
+    response = ToDoLists::UpdateToDoList.new(current_user, permitted_update_params).call
 
     if response.success?
       render_json_response(data: response.payload, serializer: ToDoListSerializer)
@@ -44,7 +44,7 @@ class ToDoListsController < ApplicationController
   end
 
   def destroy
-    response = Actions::ToDoLists::DestroyToDoList.new(current_user, permitted_destroy_params).call
+    response = ToDoLists::DestroyToDoList.new(current_user, permitted_destroy_params).call
 
     if response.success?
       head :no_content
