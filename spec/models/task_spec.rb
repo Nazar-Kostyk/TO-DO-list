@@ -29,4 +29,18 @@ RSpec.describe Task, type: :model do
   describe 'associations' do
     it { is_expected.to belong_to(:to_do_list).class_name('ToDoList') }
   end
+
+  describe 'constants' do
+    it 'defines TITLE_MAX_LENGTH' do
+      expect(described_class.const_defined?(:TITLE_MAX_LENGTH)).to be true
+    end
+  end
+
+  # # TODO: implement
+  # describe '#update_position' do
+  # end
+
+  # # TODO: implement
+  # describe '#destroy_record' do
+  # end
 end
