@@ -1,21 +1,21 @@
 # frozen_string_literal: true
 
-RSpec.describe Actions::Tasks::GetListOfTasks do
+RSpec.describe Actions::ToDoLists::GetSingleToDoList do
   subject(:result) { described_class.new(user, params).call }
 
   describe '#call' do
-    let!(:user) { create(:user) }
-    let!(:to_do_list) { create(:to_do_list_with_tasks, user: user) }
+    let!(:user) { create(:user_with_to_do_lists) }
+    let!(:to_do_list_id) { user.to_do_lists.sample.id }
 
     context 'when params are valid' do
-      let(:params) { { to_do_list_id: to_do_list.id } }
+      let(:params) { { id: to_do_list_id } }
 
       it 'returns correct payload' do
-        expect(result.payload).to eq(to_do_list.tasks.order(:position))
+        expect(result.payload).to eq(user.to_do_lists.find(to_do_list_id))
       end
 
       context 'when to-do list not found' do
-        let(:params) { { to_do_list_id: SecureRandom.uuid } }
+        let(:params) { { id: SecureRandom.uuid } }
 
         it 'raises ActiveRecord::RecordNotFound error' do
           expect { result }.to raise_error(ActiveRecord::RecordNotFound)
