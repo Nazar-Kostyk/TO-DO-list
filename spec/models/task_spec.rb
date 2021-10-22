@@ -22,8 +22,10 @@
 #  fk_rails_...  (to_do_list_id => to_do_lists.id)
 #
 RSpec.describe Task, type: :model do
+  subject(:model) { described_class.new }
+
   it 'has correct parrent' do
-    expect(subject).to be_a_kind_of(ApplicationRecord)
+    expect(model).to be_a_kind_of(ApplicationRecord)
   end
 
   describe 'associations' do

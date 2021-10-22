@@ -1,13 +1,15 @@
 # frozen_string_literal: true
 
 RSpec.describe TasksController, type: :request do
+  subject(:controller) { described_class.new }
+
   let!(:user) { create(:user) }
   let(:authorization_header) { JWTSessions::Session.new(payload: { user_id: user.id }).login[:access] }
   let(:headers) { { 'Authorization' => authorization_header } }
   let!(:to_do_list) { create(:to_do_list_with_tasks, user: user) }
 
   it 'has correct parent' do
-    expect(subject).to be_a_kind_of(ApplicationController)
+    expect(controller).to be_a_kind_of(ApplicationController)
   end
 
   describe '#index' do

@@ -1,8 +1,10 @@
 # frozen_string_literal: true
 
 RSpec.describe UsersController, type: :request do
+  subject(:controller) { described_class.new }
+
   it 'has correct parent' do
-    expect(subject).to be_a_kind_of(ApplicationController)
+    expect(controller).to be_a_kind_of(ApplicationController)
   end
 
   describe '#show' do
