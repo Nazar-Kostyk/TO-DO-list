@@ -24,5 +24,11 @@ FactoryBot.define do
     user
     title { Faker::Lorem.sentence }
     description { Faker::Lorem.paragraph }
+
+    factory :to_do_list_with_tasks do
+      transient { tasks_count { 3 } }
+
+      tasks { Array.new(tasks_count) { association(:task) } }
+    end
   end
 end

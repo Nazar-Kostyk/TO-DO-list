@@ -8,7 +8,7 @@ class UsersController < ApplicationController
   end
 
   def create
-    response = Actions::Users::CreateUser.new(permitted_create_params).call
+    response = Users::CreateUser.new(permitted_create_params).call
 
     if response.success?
       render_json_response(data: response.payload, serializer: UserSerializer, status: :created)
@@ -18,7 +18,7 @@ class UsersController < ApplicationController
   end
 
   def update
-    response = Actions::Users::UpdateUser.new(current_user, permitted_update_params).call
+    response = Users::UpdateUser.new(current_user, permitted_update_params).call
 
     if response.success?
       render_json_response(data: response.payload, serializer: UserSerializer)

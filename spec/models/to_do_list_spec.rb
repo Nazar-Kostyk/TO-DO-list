@@ -29,4 +29,14 @@ RSpec.describe ToDoList, type: :model do
 
     it { is_expected.to have_many(:tasks).class_name('Task') }
   end
+
+  describe 'constants' do
+    it 'defines TITLE_MIN_LENGTH' do
+      expect(described_class.const_defined?(:TITLE_MIN_LENGTH)).to be true
+    end
+
+    it 'defines TITLE_MAX_LENGTH' do
+      expect(described_class.const_defined?(:TITLE_MAX_LENGTH)).to be true
+    end
+  end
 end
