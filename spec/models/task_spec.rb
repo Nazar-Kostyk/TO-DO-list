@@ -36,11 +36,69 @@ RSpec.describe Task, type: :model do
     end
   end
 
-  # # TODO: implement
-  # describe '#update_position' do
-  # end
+  describe '#update_position' do
+    let!(:to_do_list) { create(:to_do_list_with_tasks) }
 
-  # # TODO: implement
-  # describe '#destroy_record' do
-  # end
+    context 'when new_position is lower that the current position' do
+      let(:task) { to_do_list.tasks.last }
+      let(:new_position) { to_do_list.tasks.first.position }
+
+      it 'updates the task' do
+        task.update_position(new_position)
+        expect(task.position).to eq(new_position)
+      end
+    end
+
+    context 'when new_position is higher than the current position' do
+      let(:task) { to_do_list.tasks.first }
+      let(:new_position) { to_do_list.tasks.last.position }
+
+      it 'updates the task' do
+        task.update_position(new_position)
+        expect(task.position).to eq(new_position)
+      end
+    end
+
+    context 'when new_position is the same as the current position' do
+      let(:task) { to_do_list.tasks.sample }
+      let(:new_position) { task.position }
+
+      it 'doesn\'t update the task' do
+        task.update_position(new_position)
+        expect(task).not_to receive(:update!)
+      end
+    end
+
+    context 'when an error ocuured during the transaction' do
+      before do
+        allow_any_instance_of(described_class).to receive(:update!).and_raise(ActiveRecord::RecordInvalid)
+      end
+
+      let(:task) { to_do_list.tasks.sample }
+      let(:new_position) { to_do_list.tasks.where.not(id: task.id).pluck(:position).sample }
+
+      it 'returns false' do
+        expect(task.update_position(new_position)).to be false
+      end
+    end
+  end
+
+  describe '#destroy_record' do
+    let!(:to_do_list) { create(:to_do_list_with_tasks) }
+    let(:task) { to_do_list.tasks.sample }
+
+    it 'deletes the task' do
+      expect { task.destroy_record }.to change(described_class, :count).by(-1)
+    end
+
+    context 'when an error ocuured during the transaction' do
+      before do
+        allow_any_instance_of(described_class).to receive(:destroy!).and_raise(ActiveRecord::RecordNotDestroyed)
+      end
+
+      it 'returns false' do
+        expect(task.destroy_record).to be false
+      end
+    end
+  end
 end
