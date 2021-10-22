@@ -7,11 +7,11 @@ class BaseValidator < Dry::Validation::Contract
   config.messages.backend = :i18n
 
   register_macro(:uuid_format) do
-    key.failure(:invalid_format, field: :id, format_name: :UUID) if value && !UUID_FORMAT.match?(value)
+    key.failure(:invalid_format, field: key.path.keys[0], format_name: :UUID) if value && !UUID_FORMAT.match?(value)
   end
 
   register_macro(:email_format) do
-    key.failure(:invalid_format, field: :email, format_name: :email) if value && !EMAIL_FORMAT.match?(value)
+    key.failure(:invalid_format, field: key.path.keys[0], format_name: :email) if value && !EMAIL_FORMAT.match?(value)
   end
 
   register_macro(:min_length) do |macro:|

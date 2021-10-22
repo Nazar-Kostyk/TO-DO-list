@@ -15,7 +15,7 @@ module Tasks
     rule(:new_position).validate(min_value: 0)
     rule(:new_position) do
       if !rule_error?(:to_do_list_id) && !rule_error?(:id) && !rule_error?(:new_position) && Task.exists?(values[:id])
-        max_allowed_position = ToDoList.find(values[:to_do_list_id]).tasks.count - 1
+        max_allowed_position = ToDoList.find(values[:to_do_list_id]).tasks.maximum(:position)
 
         if value && value > max_allowed_position
           key.failure(:max_value, field: :new_position, number: max_allowed_position)
