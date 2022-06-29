@@ -2,24 +2,24 @@
 # Refer for explanation to following link:
 # https://github.com/evilmartians/lefthook/blob/master/docs/full_guide.md
 
-pre-commit:
-  commands:
-    rubocop:
-      tags: backend style
-      run: bundle exec rubocop --parallel
-    rspec:
-      tags: code coverage
-      run: bundle exec rspec
+# pre-commit:
+#   commands:
+#     rubocop:
+#       tags: backend style
+#       run: bundle exec rubocop --parallel
+#     rspec:
+#       tags: code coverage
+#       run: bundle exec rspec
 
-pre-push:
-  parallel: true
-  commands:
-    gems-audit:
-      tags: backend security
-      run: bundle exec bundle-audit update && bundle exec bundle-audit
-    dependencies-check:
-      tags: backend security
-      run: bundle exec bundler-leak update && bundle exec bundle-leak
-    brakeman:
-      tags: backend security
-      run: bundle exec brakeman --rails6 -A -k --no-skip-vendor
+# pre-push:
+#   parallel: true
+#   commands:
+#     gems-audit:
+#       tags: backend security
+#       run: bundle exec bundle-audit update && bundle exec bundle-audit
+#     dependencies-check:
+#       tags: backend security
+#       run: bundle exec bundler-leak update && bundle exec bundle-leak
+#     brakeman:
+#       tags: backend security
+#       run: bundle exec brakeman --rails6 -A -k --no-skip-vendor
