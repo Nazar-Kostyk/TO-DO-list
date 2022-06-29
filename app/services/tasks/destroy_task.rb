@@ -20,7 +20,7 @@ module Tasks
     private
 
     def validator
-      @validator ||= ::Tasks::ShowParamsValidator.new.call(params)
+      @validator ||= ::Tasks::DestroyParamsValidator.new.call(params)
     end
 
     def validation_errors
