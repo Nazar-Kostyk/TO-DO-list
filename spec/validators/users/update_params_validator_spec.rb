@@ -35,7 +35,7 @@ RSpec.describe Users::UpdateParamsValidator do
       it { is_expected.to be_a_failure }
 
       it 'sets the correct error message' do
-        expect(subject.errors[:name]).to include(expected_error_message)
+        expect(validator.errors[:name]).to include(expected_error_message)
       end
     end
   end
@@ -50,7 +50,7 @@ RSpec.describe Users::UpdateParamsValidator do
       it { is_expected.to be_a_failure }
 
       it 'sets the correct error message' do
-        expect(subject.errors[:surname]).to include(expected_error_message)
+        expect(validator.errors[:surname]).to include(expected_error_message)
       end
     end
   end
@@ -65,7 +65,7 @@ RSpec.describe Users::UpdateParamsValidator do
       it { is_expected.to be_a_failure }
 
       it 'sets the correct error message' do
-        expect(subject.errors[:email]).to include(expected_error_message)
+        expect(validator.errors[:email]).to include(expected_error_message)
       end
     end
 
@@ -78,7 +78,7 @@ RSpec.describe Users::UpdateParamsValidator do
       it { is_expected.to be_a_failure }
 
       it 'sets the correct error message' do
-        expect(subject.errors[:email]).to include(expected_error_message)
+        expect(validator.errors[:email]).to include(expected_error_message)
       end
     end
 
@@ -91,7 +91,7 @@ RSpec.describe Users::UpdateParamsValidator do
       it { is_expected.to be_a_failure }
 
       it 'sets the correct error message' do
-        expect(subject.errors[:email]).to include(expected_error_message)
+        expect(validator.errors[:email]).to include(expected_error_message)
       end
     end
 
@@ -103,7 +103,7 @@ RSpec.describe Users::UpdateParamsValidator do
       it { is_expected.to be_a_failure }
 
       it 'sets the correct error message' do
-        expect(subject.errors[:email]).to include(expected_error_message)
+        expect(validator.errors[:email]).to include(expected_error_message)
       end
     end
   end
@@ -126,7 +126,7 @@ RSpec.describe Users::UpdateParamsValidator do
       it { is_expected.to be_a_failure }
 
       it 'sets the correct error message' do
-        expect(subject.errors[:new_password]).to include(expected_error_message)
+        expect(validator.errors[:new_password]).to include(expected_error_message)
       end
     end
 
@@ -139,7 +139,7 @@ RSpec.describe Users::UpdateParamsValidator do
       it { is_expected.to be_a_failure }
 
       it 'sets the correct error message' do
-        expect(subject.errors[:new_password]).to include(expected_error_message)
+        expect(validator.errors[:new_password]).to include(expected_error_message)
       end
     end
   end
@@ -157,7 +157,7 @@ RSpec.describe Users::UpdateParamsValidator do
       it { is_expected.to be_a_failure }
 
       it 'sets the correct error message' do
-        expect(subject.errors[:new_password_confirmation]).to include(expected_error_message)
+        expect(validator.errors[:new_password_confirmation]).to include(expected_error_message)
       end
     end
   end

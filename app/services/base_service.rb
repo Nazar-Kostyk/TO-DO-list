@@ -1,19 +1,18 @@
 # frozen_string_literal: true
 
 class BaseService
-  def build_success_response(payload)
-    OpenStruct.new({ success?: true, payload: payload })
+  include Builders::ResponseBuilder
+
+  def build_validation_errors_response(errors_hash)
+    build_failure_response(
+      {
+        status: :bad_request,
+        details: build_validation_errors_details(errors_hash)
+      }
+    )
   end
 
-  def build_failure_response(error)
-    OpenStruct.new({ success?: false, error: error })
-  end
-
-  def error_details_by_translation_key(translation_key)
-    {
-      code: 401,
-      title: I18n.t("error_messages.#{translation_key}.title", default: ''),
-      detail: I18n.t("error_messages.#{translation_key}.detail", default: '')
-    }.compact_blank
+  def build_database_error_response
+    build_error_response_by_translation_key(status: :unprocessable_entity, translation_key: 'database_error')
   end
 end

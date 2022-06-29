@@ -1,21 +1,22 @@
 # frozen_string_literal: true
 
 RSpec.describe ToDoListsController, type: :request do
+  subject(:controller) { described_class.new }
+
+  let!(:user) { create(:user_with_to_do_lists) }
+  let(:authorization_header) { JWTSessions::Session.new(payload: { user_id: user.id }).login[:access] }
+  let(:headers) { { 'Authorization' => authorization_header } }
+
   it 'has correct parent' do
-    expect(subject).to be_a_kind_of(ApplicationController)
+    expect(controller).to be_a_kind_of(ApplicationController)
   end
 
   describe '#index' do
     let(:endpoint_call) do
-      headers = { 'Authorization' => authorization_header }
-      get to_do_lists_path, headers: headers
+      get to_do_lists_path, headers: headers, as: :json
     end
 
-    let!(:user) { create(:user_with_to_do_lists) }
-
-    context 'when Authorization header is valid' do
-      let(:authorization_header) { JWTSessions::Session.new(payload: { user_id: user.id }).login[:access] }
-
+    context 'when params are valid' do
       it 'returns correct response' do
         endpoint_call
 
@@ -23,338 +24,132 @@ RSpec.describe ToDoListsController, type: :request do
         expect(JSON.parse(response.body)).to match_json_schema('to_do_lists/list')
       end
     end
+  end
 
-    context 'when Authorization header is invalid' do
+  describe '#create' do
+    let(:endpoint_call) do
+      post to_do_lists_path, params: params, headers: headers, as: :json
+    end
+
+    context 'when params are valid' do
+      let(:params) { { title: Faker::Lorem.sentence, description: Faker::Lorem.paragraph } }
+
+      it 'creates to-do list' do
+        expect { endpoint_call }.to change(ToDoList, :count).by(1)
+      end
+
+      it 'returns correct response' do
+        endpoint_call
+
+        expect(response).to be_created
+        expect(JSON.parse(response.body)).to match_json_schema('to_do_lists/single')
+      end
+    end
+
+    context 'when params are invalid' do
       before do
         endpoint_call
       end
 
-      let(:authorization_header) { 'invalid' }
+      let(:params) do
+        {
+          title: Faker::Lorem.characters(number: ToDoList::TITLE_MAX_LENGTH + 1),
+          description: Faker::Lorem.paragraph
+        }
+      end
 
-      it_behaves_like 'unauthorized request'
+      it_behaves_like 'validation errors'
     end
   end
 
   describe '#show' do
     let(:endpoint_call) do
-      headers = { 'Authorization' => authorization_header }
-      get to_do_list_path(to_do_list_id), headers: headers
+      get to_do_list_path(to_do_list), headers: headers, as: :json
     end
 
-    let!(:user) { create(:user_with_to_do_lists) }
-    let(:to_do_list_id) { user.to_do_lists.sample.id }
+    context 'when params are valid' do
+      let(:to_do_list) { user.to_do_lists.sample }
 
-    context 'when Authorization header is valid' do
-      let(:authorization_header) { JWTSessions::Session.new(payload: { user_id: user.id }).login[:access] }
+      it 'returns correct response' do
+        endpoint_call
 
-      context 'when params are valid' do
-        it 'returns correct response' do
-          endpoint_call
-
-          expect(response).to be_ok
-          expect(JSON.parse(response.body)).to match_json_schema('to_do_lists/single')
-          expect(JSON.parse(response.body)['data']['id']).to eq(to_do_list_id)
-        end
-
-        context 'when to-do list not found' do
-          before do
-            endpoint_call
-          end
-
-          let(:to_do_list_id) { SecureRandom.uuid }
-
-          it_behaves_like 'entity not found', ToDoList
-        end
-      end
-
-      context 'when params are invalid' do
-        let(:to_do_list_id) { 'invalid' }
-        let(:expected_body) do
-          {
-            'errors' => [
-              {
-                'source' => {
-                  'pointer' => '/data/attributes/id'
-                },
-                'detail' => I18n.t('dry_validation.errors.invalid_format', field: 'id', format_name: :UUID)
-              }
-            ]
-          }
-        end
-
-        it 'returns the bad request' do
-          endpoint_call
-
-          expect(response).to be_bad_request
-          expect(JSON.parse(response.body)).to eq(expected_body)
-        end
+        expect(response).to be_ok
+        expect(JSON.parse(response.body)).to match_json_schema('to_do_lists/single')
       end
     end
 
-    context 'when Authorization header is invalid' do
+    context 'when params are invalid' do
       before do
         endpoint_call
       end
 
-      let(:authorization_header) { 'invalid' }
+      let(:to_do_list) { 'invalid' }
 
-      it_behaves_like 'unauthorized request'
-    end
-  end
-
-  describe '#create' do
-    let(:endpoint_call) do
-      headers = { 'Authorization' => authorization_header }
-      post to_do_lists_path, params: params, headers: headers
-    end
-
-    let!(:user) { create(:user) }
-
-    context 'when Authorization header is valid' do
-      let(:authorization_header) { JWTSessions::Session.new(payload: { user_id: user.id }).login[:access] }
-
-      context 'when params are valid' do
-        let(:params) { { title: Faker::Lorem.sentence, description: Faker::Lorem.paragraph } }
-
-        it 'creates to-do list' do
-          expect { endpoint_call }.to change(ToDoList, :count).by(1)
-          expect(user.to_do_lists.size).to eq(1)
-        end
-
-        it 'returns correct response' do
-          endpoint_call
-
-          expect(response).to be_created
-          expect(JSON.parse(response.body)).to match_json_schema('to_do_lists/single')
-        end
-
-        context 'when database error occured' do
-          before do
-            allow_any_instance_of(ToDoList).to receive(:save).and_return(nil)
-            endpoint_call
-          end
-
-          it_behaves_like 'database error'
-        end
-      end
-
-      context 'when params are invalid' do
-        let(:params) do
-          {
-            title: Faker::Lorem.characters(number: ToDoList::TITLE_MAX_LENGTH + 1),
-            description: Faker::Lorem.paragraph
-          }
-        end
-        let(:expected_body) do
-          {
-            'errors' => [
-              {
-                'source' => {
-                  'pointer' => '/data/attributes/title'
-                },
-                'detail' =>
-                  I18n.t(
-                    'dry_validation.errors.exceeds_maximum_length',
-                    field: :title,
-                    length: ToDoList::TITLE_MAX_LENGTH
-                  )
-              }
-            ]
-          }
-        end
-
-        it 'returns correct response' do
-          endpoint_call
-
-          expect(response).to be_bad_request
-          expect(JSON.parse(response.body)).to eq(expected_body)
-        end
-      end
-    end
-
-    context 'when Authorization header is invalid' do
-      before do
-        endpoint_call
-      end
-
-      let(:authorization_header) { 'invalid' }
-      let(:params) { {} }
-
-      it_behaves_like 'unauthorized request'
+      it_behaves_like 'validation errors'
     end
   end
 
   describe '#update' do
     let(:endpoint_call) do
-      headers = { 'Authorization' => authorization_header }
-      put to_do_list_path(to_do_list_id), params: params, headers: headers
+      put to_do_list_path(to_do_list), params: params, headers: headers, as: :json
     end
+    let(:to_do_list) { user.to_do_lists.sample }
 
-    let!(:user) { create(:user_with_to_do_lists) }
-    let(:to_do_list_id) { user.to_do_lists.sample.id }
+    context 'when params are valid' do
+      let(:params) { { title: Faker::Lorem.sentence, description: Faker::Lorem.paragraph } }
 
-    context 'when Authorization header is valid' do
-      let(:authorization_header) { JWTSessions::Session.new(payload: { user_id: user.id }).login[:access] }
+      it 'returns correct response' do
+        endpoint_call
 
-      context 'when params are valid' do
-        let(:params) { { title: Faker::Lorem.sentence, description: Faker::Lorem.paragraph } }
-
-        it 'returns correct response' do
-          endpoint_call
-
-          expect(response).to be_ok
-          expect(JSON.parse(response.body)).to match_json_schema('to_do_lists/single')
-        end
-
-        context 'when to-do list not found' do
-          before do
-            endpoint_call
-          end
-
-          let(:to_do_list_id) { SecureRandom.uuid }
-
-          it_behaves_like 'entity not found', ToDoList
-        end
-
-        context 'when database error occured' do
-          before do
-            allow_any_instance_of(ToDoList).to receive(:update).and_return(nil)
-            endpoint_call
-          end
-
-          it_behaves_like 'database error'
-        end
-      end
-
-      context 'when params are invalid' do
-        let(:to_do_list_id) { 'invalid' }
-        let(:params) do
-          {
-            title: Faker::Lorem.characters(number: ToDoList::TITLE_MAX_LENGTH + 1),
-            description: Faker::Lorem.paragraph
-          }
-        end
-        let(:expected_body) do
-          {
-            'errors' => [
-              {
-                'source' => {
-                  'pointer' => '/data/attributes/id'
-                },
-                'detail' => I18n.t('dry_validation.errors.invalid_format', field: 'id', format_name: :UUID)
-              },
-              {
-                'source' => {
-                  'pointer' => '/data/attributes/title'
-                },
-                'detail' =>
-                  I18n.t(
-                    'dry_validation.errors.exceeds_maximum_length',
-                    field: :title,
-                    length: ToDoList::TITLE_MAX_LENGTH
-                  )
-              }
-            ]
-          }
-        end
-
-        it 'returns correct response' do
-          endpoint_call
-
-          expect(response).to be_bad_request
-          expect(JSON.parse(response.body)).to eq(expected_body)
-        end
+        expect(response).to be_ok
+        expect(JSON.parse(response.body)).to match_json_schema('to_do_lists/single')
       end
     end
 
-    context 'when Authorization header is invalid' do
+    context 'when params are invalid' do
       before do
         endpoint_call
       end
 
-      let(:authorization_header) { 'invalid' }
-      let(:params) { {} }
+      let(:params) do
+        {
+          title: Faker::Lorem.characters(number: ToDoList::TITLE_MAX_LENGTH + 1),
+          description: Faker::Lorem.paragraph
+        }
+      end
 
-      it_behaves_like 'unauthorized request'
+      it_behaves_like 'validation errors'
     end
   end
 
   describe '#destroy' do
     let(:endpoint_call) do
-      headers = { 'Authorization' => authorization_header }
-      delete to_do_list_path(to_do_list_id), headers: headers
+      delete to_do_list_path(to_do_list), headers: headers, as: :json
     end
 
-    let!(:user) { create(:user_with_to_do_lists) }
-    let(:to_do_list_id) { user.to_do_lists.sample.id }
+    context 'when params are valid' do
+      let(:to_do_list) { user.to_do_lists.sample }
 
-    context 'when Authorization header is valid' do
-      let(:authorization_header) { JWTSessions::Session.new(payload: { user_id: user.id }).login[:access] }
-
-      context 'when params are valid' do
-        it 'deletes to-do list' do
-          expect { endpoint_call }.to change(ToDoList, :count).by(-1)
-        end
-
-        it 'returns correct response' do
-          endpoint_call
-
-          expect(response).to be_no_content
-          expect(response.body).to be_empty
-        end
-
-        context 'when to-do list not found' do
-          before do
-            endpoint_call
-          end
-
-          let(:to_do_list_id) { SecureRandom.uuid }
-
-          it_behaves_like 'entity not found', ToDoList
-        end
-
-        context 'when database error occured' do
-          before do
-            allow_any_instance_of(ToDoList).to receive(:destroy).and_return(nil)
-            endpoint_call
-          end
-
-          it_behaves_like 'database error'
-        end
+      it 'destroys task' do
+        expect { endpoint_call }.to change(ToDoList, :count).by(-1)
       end
 
-      context 'when params are invalid' do
-        let(:to_do_list_id) { 'invalid' }
-        let(:expected_body) do
-          {
-            'errors' => [
-              {
-                'source' => {
-                  'pointer' => '/data/attributes/id'
-                },
-                'detail' => I18n.t('dry_validation.errors.invalid_format', field: 'id', format_name: :UUID)
-              }
-            ]
-          }
-        end
+      it 'returns correct response' do
+        endpoint_call
 
-        it 'returns the bad request' do
-          endpoint_call
-
-          expect(response).to be_bad_request
-          expect(JSON.parse(response.body)).to eq(expected_body)
-        end
+        expect(response).to be_no_content
+        expect(response.body).to be_empty
       end
     end
 
-    context 'when Authorization header is invalid' do
+    context 'when params are invalid' do
       before do
         endpoint_call
       end
 
-      let(:authorization_header) { 'invalid' }
+      let(:to_do_list) { 'invalid' }
 
-      it_behaves_like 'unauthorized request'
+      it_behaves_like 'validation errors'
     end
   end
 end

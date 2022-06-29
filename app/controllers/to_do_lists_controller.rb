@@ -4,67 +4,52 @@ class ToDoListsController < ApplicationController
   before_action :authorize_access_request!
 
   def index
-    render_json_response(data: current_user.to_do_lists.includes(:tasks),
-                         serializer: ToDoListSerializer,
-                         options: { is_collection: true })
+    response = ToDoLists::GetListOfToDoLists.new(current_user).call
+
+    if response.success?
+      render_json_response(data: response.payload, serializer: ToDoListSerializer, options: { is_collection: true })
+    else
+      render_json_error(response.error)
+    end
   end
 
   def show
-    validator = ToDoLists::ShowParamsValidator.new.call(permitted_show_params)
+    response = ToDoLists::GetSingleToDoList.new(current_user, permitted_show_params).call
 
-    if validator.success?
-      render_json_response(data: current_user.to_do_lists.find(permitted_show_params[:id]),
-                           serializer: ToDoListSerializer)
+    if response.success?
+      render_json_response(data: response.payload, serializer: ToDoListSerializer)
     else
-      render_json_validation_error(validator.errors.to_h)
+      render_json_error(response.error)
     end
   end
 
   def create
-    validator = ToDoLists::CreateParamsValidator.new.call(permitted_create_params)
+    response = ToDoLists::CreateToDoList.new(current_user, permitted_create_params).call
 
-    if validator.success?
-      @to_do_list = ToDoList.new(model_params)
-      if @to_do_list.save
-        render_json_response(data: @to_do_list, serializer: ToDoListSerializer, status: :created)
-      else
-        render_json_error(status: :unprocessable_entity, error_key: 'database_error')
-      end
+    if response.success?
+      render_json_response(data: response.payload, serializer: ToDoListSerializer, status: :created)
     else
-      render_json_validation_error(validator.errors.to_h)
+      render_json_error(response.error)
     end
   end
 
-  # Temporarly disabling rubocop offense.
-  # Will be fixed in a separate PR.
-  def update # rubocop:disable Metrics/AbcSize
-    validator = ToDoLists::UpdateParamsValidator.new.call(permitted_update_params)
+  def update
+    response = ToDoLists::UpdateToDoList.new(current_user, permitted_update_params).call
 
-    if validator.success?
-      @to_do_list = current_user.to_do_lists.find(permitted_show_params[:id])
-
-      if @to_do_list.update(permitted_update_params.slice(:title, :description))
-        render_json_response(data: @to_do_list, serializer: ToDoListSerializer)
-      else
-        render_json_error(status: :unprocessable_entity, error_key: 'database_error')
-      end
+    if response.success?
+      render_json_response(data: response.payload, serializer: ToDoListSerializer)
     else
-      render_json_validation_error(validator.errors.to_h)
+      render_json_error(response.error)
     end
   end
 
   def destroy
-    validator = ToDoLists::DestroyParamsValidator.new.call(permitted_destroy_params)
+    response = ToDoLists::DestroyToDoList.new(current_user, permitted_destroy_params).call
 
-    if validator.success?
-      @to_do_list = current_user.to_do_lists.find(permitted_show_params[:id])
-      if @to_do_list.destroy
-        head :no_content
-      else
-        render_json_error(status: :unprocessable_entity, error_key: 'database_error')
-      end
+    if response.success?
+      head :no_content
     else
-      render_json_validation_error(validator.errors.to_h)
+      render_json_error(response.error)
     end
   end
 
@@ -84,9 +69,5 @@ class ToDoListsController < ApplicationController
 
   def permitted_destroy_params
     params.permit(:id).to_h
-  end
-
-  def model_params
-    permitted_create_params.merge({ user_id: current_user.id }).compact_blank
   end
 end
