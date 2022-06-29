@@ -20,13 +20,25 @@
 #  fk_rails_...  (user_id => users.id)
 #
 RSpec.describe ToDoList, type: :model do
+  subject(:model) { described_class.new }
+
   it 'has correct parrent' do
-    expect(subject).to be_a_kind_of(ApplicationRecord)
+    expect(model).to be_a_kind_of(ApplicationRecord)
   end
 
   describe 'associations' do
     it { is_expected.to belong_to(:user).class_name('User') }
 
     it { is_expected.to have_many(:tasks).class_name('Task') }
+  end
+
+  describe 'constants' do
+    it 'defines TITLE_MIN_LENGTH' do
+      expect(described_class.const_defined?(:TITLE_MIN_LENGTH)).to be true
+    end
+
+    it 'defines TITLE_MAX_LENGTH' do
+      expect(described_class.const_defined?(:TITLE_MAX_LENGTH)).to be true
+    end
   end
 end

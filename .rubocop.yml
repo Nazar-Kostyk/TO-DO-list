@@ -11,6 +11,10 @@ AllCops:
     - 'builds/**/*'
     - 'vendor/**/*'
 
+Lint/MissingSuper:
+  Exclude:
+    - 'app/services/**/*'
+
 Metrics/BlockLength:
   Enabled: false
 Metrics/MethodLength:
@@ -26,11 +30,11 @@ Rails/FilePath:
 
 RSpec/MultipleExpectations:
   Enabled: false
-RSpec/NamedSubject:
-  Enabled: false
 RSpec/NestedGroups:
-  Enabled: false
+  Max: 4
 RSpec/MultipleMemoizedHelpers:
   Enabled: false
 RSpec/AnyInstance:
   Enabled: false
+RSpec/MessageSpies:
+  EnforcedStyle: 'receive'

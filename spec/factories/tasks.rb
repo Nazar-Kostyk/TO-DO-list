@@ -14,8 +14,8 @@
 #
 # Indexes
 #
-#  index_tasks_on_position       (position) UNIQUE
-#  index_tasks_on_to_do_list_id  (to_do_list_id)
+#  index_tasks_on_to_do_list_id               (to_do_list_id)
+#  index_tasks_on_to_do_list_id_and_position  (to_do_list_id,position) UNIQUE
 #
 # Foreign Keys
 #
@@ -26,6 +26,6 @@ FactoryBot.define do
     to_do_list
     title { Faker::Lorem.sentence }
     is_completed { Faker::Boolean.boolean }
-    sequence(:position)
+    sequence(:position, 0)
   end
 end

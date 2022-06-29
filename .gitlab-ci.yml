@@ -19,10 +19,14 @@ stages:
   extends: .build
   services:
     - postgres:12.8
+    - redis:5.0.7
   variables:
     POSTGRES_DB: $POSTGRES_DB
     POSTGRES_USER: $POSTGRES_USER
     POSTGRES_PASSWORD: $POSTGRES_PASSWORD
+    REDIS_DB: $REDIS_DB
+    REDIS_URL: $REDIS_URL
+    REDIS_PORT: $REDIS_PORT
   before_script:
     - gem install bundler --no-document
     - bundle config set --local path 'vendor'
@@ -35,12 +39,6 @@ rubocop:
   stage: running_linters
   script:
     - bundle exec rubocop --parallel -c .rubocop.yml
-
-best_practices:
-  extends: .build
-  stage: running_linters
-  script:
-    - bundle exec rails_best_practices
 
 gems-audit:
   extends: .build

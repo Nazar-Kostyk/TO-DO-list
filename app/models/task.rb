@@ -14,13 +14,48 @@
 #
 # Indexes
 #
-#  index_tasks_on_position       (position) UNIQUE
-#  index_tasks_on_to_do_list_id  (to_do_list_id)
+#  index_tasks_on_to_do_list_id               (to_do_list_id)
+#  index_tasks_on_to_do_list_id_and_position  (to_do_list_id,position) UNIQUE
 #
 # Foreign Keys
 #
 #  fk_rails_...  (to_do_list_id => to_do_lists.id)
 #
 class Task < ApplicationRecord
+  TITLE_MAX_LENGTH = 255
+
   belongs_to :to_do_list
+
+  def update_position(new_position)
+    return self if position == new_position
+
+    Task.transaction do
+      # Do not check the position uniqueness constraint until the transaction commit
+      ActiveRecord::Base.connection.execute('SET CONSTRAINTS index_tasks_on_to_do_list_id_and_position DEFERRED')
+
+      if position < new_position
+        Task.where('to_do_list_id = ? AND position > ? AND position <= ?', to_do_list_id, position, new_position)
+            .update_all('position = position - 1') # rubocop:disable Rails/SkipsModelValidations
+      else
+        Task.where('to_do_list_id = ? AND position >= ? AND position < ?', to_do_list_id, new_position, position)
+            .update_all('position = position + 1') # rubocop:disable Rails/SkipsModelValidations
+      end
+
+      update!(position: new_position)
+    end
+  rescue ActiveRecord::RecordInvalid
+    false
+  end
+
+  def destroy_record
+    Task.transaction do
+      # Do not check the position uniqueness constraint until the transaction commit
+      ActiveRecord::Base.connection.execute('SET CONSTRAINTS index_tasks_on_to_do_list_id_and_position DEFERRED')
+
+      destroy!
+      Task.where('to_do_list_id = ? AND position > ?', to_do_list_id, position).update_all('position = position - 1') # rubocop:disable Rails/SkipsModelValidations
+    end
+  rescue ActiveRecord::RecordNotDestroyed
+    false
+  end
 end

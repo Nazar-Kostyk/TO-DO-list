@@ -26,7 +26,7 @@ RSpec.describe ToDoLists::CreateParamsValidator do
         it { is_expected.to be_a_failure }
 
         it 'sets the correct error message' do
-          expect(subject.errors[:title]).to include(expected_error_message)
+          expect(validator.errors[:title]).to include(expected_error_message)
         end
       end
 
